@@ -1,0 +1,65 @@
+id: typescript/vitest-no-global-mutation
+language: TypeScript
+severity: error
+message: テストではグローバルな状態を直接変えない。vi.stubGlobal と vi.stubEnv を使う。
+note: テストのファイルを分離しない設定では、直接変えたグローバルな状態がほかのテストのファイルにも残る。vi.stubGlobal と vi.stubEnv で変えた値は、テストのあとで元に戻る。
+files:
+  - "**/*.{test,spec}.{ts,mts,cts,tsx}"
+rule:
+  any:
+    - kind: assignment_expression
+      has:
+        field: left
+        regex: ^(globalThis|window|global|self)\b|^process\.env\b
+    - kind: augmented_assignment_expression
+      has:
+        field: left
+        regex: ^(globalThis|window|global|self)\b|^process\.env\b
+    - kind: unary_expression
+      regex: ^delete\s+(globalThis|window|global|self|process\.env)\b
+    - pattern: Object.defineProperty($TARGET, $$$)
+      has:
+        field: arguments
+        has:
+          nthChild: 1
+          regex: ^(globalThis|window|global|self|process\.env)$
+    - pattern: Object.assign($TARGET, $$$)
+      has:
+        field: arguments
+        has:
+          nthChild: 1
+          regex: ^(globalThis|window|global|self|process\.env)$
+    - pattern: process.chdir($$$)
+---
+id: tsx/vitest-no-global-mutation
+language: Tsx
+severity: error
+message: テストではグローバルな状態を直接変えない。vi.stubGlobal と vi.stubEnv を使う。
+note: テストのファイルを分離しない設定では、直接変えたグローバルな状態がほかのテストのファイルにも残る。vi.stubGlobal と vi.stubEnv で変えた値は、テストのあとで元に戻る。
+files:
+  - "**/*.{test,spec}.{ts,mts,cts,tsx}"
+rule:
+  any:
+    - kind: assignment_expression
+      has:
+        field: left
+        regex: ^(globalThis|window|global|self)\b|^process\.env\b
+    - kind: augmented_assignment_expression
+      has:
+        field: left
+        regex: ^(globalThis|window|global|self)\b|^process\.env\b
+    - kind: unary_expression
+      regex: ^delete\s+(globalThis|window|global|self|process\.env)\b
+    - pattern: Object.defineProperty($TARGET, $$$)
+      has:
+        field: arguments
+        has:
+          nthChild: 1
+          regex: ^(globalThis|window|global|self|process\.env)$
+    - pattern: Object.assign($TARGET, $$$)
+      has:
+        field: arguments
+        has:
+          nthChild: 1
+          regex: ^(globalThis|window|global|self|process\.env)$
+    - pattern: process.chdir($$$)

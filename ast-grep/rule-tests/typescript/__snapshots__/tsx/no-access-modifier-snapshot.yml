@@ -1,0 +1,23 @@
+id: tsx/no-access-modifier
+snapshots:
+  ? |
+    class C { private x = 1; }
+  : labels:
+      - source: private
+        style: primary
+        start: 10
+        end: 17
+  ? |
+    class C { protected f() {} }
+  : labels:
+      - source: protected
+        style: primary
+        start: 10
+        end: 19
+  ? |
+    class C { public x = 1; }
+  : labels:
+      - source: public
+        style: primary
+        start: 10
+        end: 16

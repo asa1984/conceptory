@@ -1,0 +1,11 @@
+id: typescript/no-access-modifier
+valid:
+  - |
+    class C { #x = 1; readonly y = 2; static z = 3; }
+invalid:
+  - |
+    class C { private x = 1; }
+  - |
+    class C { protected f() {} }
+  - |
+    class C { public x = 1; }

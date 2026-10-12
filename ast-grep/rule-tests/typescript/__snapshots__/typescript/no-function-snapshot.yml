@@ -1,0 +1,23 @@
+id: typescript/no-function
+snapshots:
+  ? |
+    const f = function () {};
+  : labels:
+      - source: function () {}
+        style: primary
+        start: 10
+        end: 24
+  ? |
+    export default function () {}
+  : labels:
+      - source: function () {}
+        style: primary
+        start: 15
+        end: 29
+  ? |
+    function f() {}
+  : labels:
+      - source: function f() {}
+        style: primary
+        start: 0
+        end: 15

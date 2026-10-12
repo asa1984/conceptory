@@ -1,0 +1,70 @@
+id: typescript/labeled-arguments
+snapshots:
+  ? |
+    class C { constructor(a: number, b: number) {} }
+  : labels:
+      - source: "(a: number, b: number)"
+        style: primary
+        start: 21
+        end: 43
+      - source: "constructor(a: number, b: number) {}"
+        style: secondary
+        start: 10
+        end: 46
+      - source: "b: number"
+        style: secondary
+        start: 33
+        end: 42
+  ? |
+    class C { f(a: number, b: number) {} }
+  : labels:
+      - source: "(a: number, b: number)"
+        style: primary
+        start: 11
+        end: 33
+      - source: "f(a: number, b: number) {}"
+        style: secondary
+        start: 10
+        end: 36
+      - source: "b: number"
+        style: secondary
+        start: 23
+        end: 32
+  ? |
+    const f = (a: number, b: number) => a + b;
+  : labels:
+      - source: "(a: number, b: number)"
+        style: primary
+        start: 10
+        end: 32
+      - source: "f = (a: number, b: number) => a + b"
+        style: secondary
+        start: 6
+        end: 41
+      - source: "(a: number, b: number) => a + b"
+        style: secondary
+        start: 10
+        end: 41
+      - source: "b: number"
+        style: secondary
+        start: 22
+        end: 31
+  ? |
+    const o = { f: (a: number, b?: number) => a };
+  : labels:
+      - source: "(a: number, b?: number)"
+        style: primary
+        start: 15
+        end: 38
+      - source: "f: (a: number, b?: number) => a"
+        style: secondary
+        start: 12
+        end: 43
+      - source: "(a: number, b?: number) => a"
+        style: secondary
+        start: 15
+        end: 43
+      - source: "b?: number"
+        style: secondary
+        start: 27
+        end: 37

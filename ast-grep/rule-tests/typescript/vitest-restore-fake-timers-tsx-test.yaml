@@ -1,0 +1,12 @@
+id: tsx/vitest-restore-fake-timers
+valid:
+  - |
+    beforeEach(() => { vi.useFakeTimers(); });
+    afterEach(() => { vi.useRealTimers(); });
+  - |
+    test("t", () => { vi.useFakeTimers(); vi.setSystemTime(0); vi.useRealTimers(); });
+invalid:
+  - |
+    beforeEach(() => { vi.useFakeTimers(); });
+  - |
+    test("t", () => { vi.setSystemTime(new Date(0)); });

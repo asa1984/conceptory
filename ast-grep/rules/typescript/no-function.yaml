@@ -1,0 +1,19 @@
+id: typescript/no-function
+language: TypeScript
+severity: error
+message: function 宣言と function 式の代わりにアロー関数を使う。
+note: this の束縛、bind、ホイスティング、Function のコンストラクターが必要な箇所に限り、無効化のコメントに理由を添えて function を使う。ジェネレーターはアロー関数で書けないので対象外である。
+rule:
+  any:
+    - kind: function_declaration
+    - kind: function_expression
+---
+id: tsx/no-function
+language: Tsx
+severity: error
+message: function 宣言と function 式の代わりにアロー関数を使う。
+note: this の束縛、bind、ホイスティング、Function のコンストラクターが必要な箇所に限り、無効化のコメントに理由を添えて function を使う。ジェネレーターはアロー関数で書けないので対象外である。
+rule:
+  any:
+    - kind: function_declaration
+    - kind: function_expression

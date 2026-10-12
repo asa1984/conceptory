@@ -1,0 +1,71 @@
+id: typescript/use-effect-cleanup
+snapshots:
+  ? |
+    useEffect(() => { if (ready) { return () => stop(); } });
+  : labels:
+      - source: useEffect(() => { if (ready) { return () => stop(); } })
+        style: primary
+        start: 0
+        end: 56
+      - source: "{ if (ready) { return () => stop(); } }"
+        style: secondary
+        start: 16
+        end: 55
+      - source: () => { if (ready) { return () => stop(); } }
+        style: secondary
+        start: 10
+        end: 55
+      - source: () => { if (ready) { return () => stop(); } }
+        style: secondary
+        start: 10
+        end: 55
+      - source: useEffect
+        style: secondary
+        start: 0
+        end: 9
+  ? |
+    useEffect(() => { track(); }, []);
+  : labels:
+      - source: useEffect(() => { track(); }, [])
+        style: primary
+        start: 0
+        end: 33
+      - source: "{ track(); }"
+        style: secondary
+        start: 16
+        end: 28
+      - source: () => { track(); }
+        style: secondary
+        start: 10
+        end: 28
+      - source: () => { track(); }
+        style: secondary
+        start: 10
+        end: 28
+      - source: useEffect
+        style: secondary
+        start: 0
+        end: 9
+  ? |
+    useLayoutEffect(() => { node.focus(); });
+  : labels:
+      - source: useLayoutEffect(() => { node.focus(); })
+        style: primary
+        start: 0
+        end: 40
+      - source: "{ node.focus(); }"
+        style: secondary
+        start: 22
+        end: 39
+      - source: () => { node.focus(); }
+        style: secondary
+        start: 16
+        end: 39
+      - source: () => { node.focus(); }
+        style: secondary
+        start: 16
+        end: 39
+      - source: useLayoutEffect
+        style: secondary
+        start: 0
+        end: 15

@@ -1,0 +1,29 @@
+id: typescript/vitest-no-global-mutation
+valid:
+  - |
+    vi.stubGlobal("fetch", fakeFetch);
+  - |
+    vi.stubEnv("NODE_ENV", "test");
+  - |
+    const value = process.env.HOME;
+  - |
+    object.value = 1;
+invalid:
+  - |
+    globalThis.fetch = fakeFetch;
+  - |
+    window.location.hash = "#a";
+  - |
+    process.env.NODE_ENV = "test";
+  - |
+    process.env["HOME"] = "/tmp";
+  - |
+    delete globalThis.fetch;
+  - |
+    Object.defineProperty(globalThis, "fetch", { value: fakeFetch });
+  - |
+    Object.assign(process.env, { A: "1" });
+  - |
+    process.chdir("/tmp");
+  - |
+    globalThis.count += 1;

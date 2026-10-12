@@ -1,0 +1,101 @@
+id: typescript/vitest-no-global-mutation
+snapshots:
+  ? |
+    Object.assign(process.env, { A: "1" });
+  : labels:
+      - source: 'Object.assign(process.env, { A: "1" })'
+        style: primary
+        start: 0
+        end: 38
+      - source: process.env
+        style: secondary
+        start: 14
+        end: 25
+      - source: process.env
+        style: secondary
+        start: 14
+        end: 25
+  ? |
+    Object.defineProperty(globalThis, "fetch", { value: fakeFetch });
+  : labels:
+      - source: 'Object.defineProperty(globalThis, "fetch", { value: fakeFetch })'
+        style: primary
+        start: 0
+        end: 64
+      - source: globalThis
+        style: secondary
+        start: 22
+        end: 32
+      - source: globalThis
+        style: secondary
+        start: 22
+        end: 32
+  ? |
+    delete globalThis.fetch;
+  : labels:
+      - source: delete globalThis.fetch
+        style: primary
+        start: 0
+        end: 23
+  ? |
+    globalThis.count += 1;
+  : labels:
+      - source: globalThis.count += 1
+        style: primary
+        start: 0
+        end: 21
+      - source: globalThis.count
+        style: secondary
+        start: 0
+        end: 16
+  ? |
+    globalThis.fetch = fakeFetch;
+  : labels:
+      - source: globalThis.fetch = fakeFetch
+        style: primary
+        start: 0
+        end: 28
+      - source: globalThis.fetch
+        style: secondary
+        start: 0
+        end: 16
+  ? |
+    process.chdir("/tmp");
+  : labels:
+      - source: process.chdir("/tmp")
+        style: primary
+        start: 0
+        end: 21
+  ? |
+    process.env.NODE_ENV = "test";
+  : labels:
+      - source: process.env.NODE_ENV = "test"
+        style: primary
+        start: 0
+        end: 29
+      - source: process.env.NODE_ENV
+        style: secondary
+        start: 0
+        end: 20
+  ? |
+    process.env["HOME"] = "/tmp";
+  : labels:
+      - source: process.env["HOME"] = "/tmp"
+        style: primary
+        start: 0
+        end: 28
+      - source: process.env["HOME"]
+        style: secondary
+        start: 0
+        end: 19
+  ? |
+    window.location.hash = "#a";
+  : labels:
+      - source: window.location.hash = "#a"
+        style: primary
+        start: 0
+        end: 27
+      - source: window.location.hash
+        style: secondary
+        start: 0
+        end: 20

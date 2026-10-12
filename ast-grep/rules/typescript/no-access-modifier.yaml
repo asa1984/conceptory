@@ -1,0 +1,15 @@
+id: typescript/no-access-modifier
+language: TypeScript
+severity: error
+message: アクセス修飾子の代わりに JavaScript の private element（#name）を使う。
+note: TypeScript のアクセス修飾子は型検査の段階でしか制限せず、実行時にはどこからでもアクセスできる。
+rule:
+  kind: accessibility_modifier
+---
+id: tsx/no-access-modifier
+language: Tsx
+severity: error
+message: アクセス修飾子の代わりに JavaScript の private element（#name）を使う。
+note: TypeScript のアクセス修飾子は型検査の段階でしか制限せず、実行時にはどこからでもアクセスできる。
+rule:
+  kind: accessibility_modifier

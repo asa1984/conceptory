@@ -1,0 +1,19 @@
+id: typescript/no-index-file
+language: TypeScript
+severity: error
+message: index.ts を置かない。ディレクトリ x/ のモジュールをまとめて export するには、x/ と並べて x.ts を置く。
+note: x.ts は、あとから x/ に分割しても import する側のパスが変わらない。
+files:
+  - "**/index.{ts,mts,cts,tsx}"
+rule:
+  kind: program
+---
+id: tsx/no-index-file
+language: Tsx
+severity: error
+message: index.ts を置かない。ディレクトリ x/ のモジュールをまとめて export するには、x/ と並べて x.ts を置く。
+note: x.ts は、あとから x/ に分割しても import する側のパスが変わらない。
+files:
+  - "**/index.{ts,mts,cts,tsx}"
+rule:
+  kind: program

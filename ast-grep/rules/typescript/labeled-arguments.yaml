@@ -1,0 +1,45 @@
+id: typescript/labeled-arguments
+language: TypeScript
+severity: error
+message: 引数が2つ以上の関数は、引数をオブジェクトで受け取る。
+note: 呼び出す側で各引数の役割が読めるようにする。ライブラリや組み込み関数が位置引数を要求するコールバックは、呼び出しの引数に直接書けば対象外になる。
+rule:
+  kind: formal_parameters
+  has:
+    any:
+      - kind: required_parameter
+      - kind: optional_parameter
+    nthChild: 2
+  inside:
+    any:
+      - kind: arrow_function
+        inside:
+          any:
+            - kind: variable_declarator
+            - kind: public_field_definition
+            - kind: pair
+      - kind: method_definition
+    field: parameters
+---
+id: tsx/labeled-arguments
+language: Tsx
+severity: error
+message: 引数が2つ以上の関数は、引数をオブジェクトで受け取る。
+note: 呼び出す側で各引数の役割が読めるようにする。ライブラリや組み込み関数が位置引数を要求するコールバックは、呼び出しの引数に直接書けば対象外になる。
+rule:
+  kind: formal_parameters
+  has:
+    any:
+      - kind: required_parameter
+      - kind: optional_parameter
+    nthChild: 2
+  inside:
+    any:
+      - kind: arrow_function
+        inside:
+          any:
+            - kind: variable_declarator
+            - kind: public_field_definition
+            - kind: pair
+      - kind: method_definition
+    field: parameters
