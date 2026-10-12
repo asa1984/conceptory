@@ -23,6 +23,13 @@ export default defineConfig({
     // .direnv, where direnv unpacks the flake inputs, also contains tests from other projects.
     exclude: [...configDefaults.exclude, "**/.direnv/**"],
   },
+  staged: {
+    "*": "vp check --fix --no-error-on-unmatched-pattern",
+    "*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}": "ast-grep scan",
+    "*.rs": "rustfmt",
+    "*.toml": "taplo fmt",
+    "*.nix": "nixfmt",
+  },
   run: {
     tasks: {
       // Runs every check in the repository in addition to formatting, linting, and type checking.

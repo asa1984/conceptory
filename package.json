@@ -2,6 +2,9 @@
   "name": "conceptory",
   "private": true,
   "type": "module",
+  "scripts": {
+    "prepare": "vp config --no-agent"
+  },
   "devDependencies": {
     "@conceptory/tsconfig": "workspace:*",
     "@conceptory/vite-plus-config": "workspace:*",
