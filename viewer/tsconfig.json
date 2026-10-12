@@ -1,0 +1,9 @@
+{
+  "extends": "@conceptory/tsconfig/bundler.json",
+  "compilerOptions": {
+    "types": ["node", "vite-plus/client"],
+    // Load CSS type declarations that packages ship as *.d.css.ts
+    "allowArbitraryExtensions": true
+  },
+  "include": ["src", "vite.config.ts"]
+}

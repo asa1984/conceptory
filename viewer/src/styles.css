@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/* The graph reads its colors from JavaScript, so export unused colors as CSS variables too. */
+@theme static {
+  --color-canvas: #ffffff;
+  --color-canvas-subtle: #f6f8fa;
+  --color-fg: #1f2328;
+  --color-fg-muted: #59636e;
+  --color-line: #d1d9e0;
+  --color-line-strong: #818b98;
+  --color-accent: #0969da;
+  --color-accent-subtle: #ddf4ff;
+  --color-danger: #d1242f;
+  --color-danger-subtle: #ffebe9;
+  --color-attention: #9a6700;
+  --color-attention-subtle: #fff8c5;
+  --color-success: #1a7f37;
+  --color-guide: #8250df;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-canvas: #0d1117;
+    --color-canvas-subtle: #151b23;
+    --color-fg: #f0f6fc;
+    --color-fg-muted: #9198a1;
+    --color-line: #3d444d;
+    --color-line-strong: #656c76;
+    --color-accent: #4493f8;
+    --color-accent-subtle: #121d2f;
+    --color-danger: #f85149;
+    --color-danger-subtle: #25171c;
+    --color-attention: #d29922;
+    --color-attention-subtle: #272115;
+    --color-success: #3fb950;
+    --color-guide: #ab7df8;
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply bg-canvas text-fg antialiased;
+  }
+}
+
+/* Leave space above a heading in the body when jumping to it. */
+.markdown-body [id] {
+  scroll-margin-top: 1.5rem;
+}
+
+.markdown-body {
+  background: transparent;
+}
+
+/* Restore the list markers that Tailwind's preflight removes, inside the body only, as GitHub does. */
+.markdown-body ul {
+  list-style-type: disc;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+}
+
+.markdown-body ul ul,
+.markdown-body ol ul {
+  list-style-type: circle;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
