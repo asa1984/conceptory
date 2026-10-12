@@ -1,0 +1,4 @@
+{
+  "extends": "@conceptory/tsconfig/node.json",
+  "include": ["ast-grep/*.ts", "scripts", "packages/*/*.ts", "vite.config.ts"]
+}

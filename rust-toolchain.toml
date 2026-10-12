@@ -1,0 +1,5 @@
+# rustfmt uses nightly-only options, so flake.nix installs it separately from a date-pinned nightly
+[toolchain]
+channel = "1.99.0"
+profile = "minimal"
+components = ["clippy", "rust-analyzer", "rust-src"]
