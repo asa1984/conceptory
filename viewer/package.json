@@ -1,0 +1,28 @@
+{
+  "name": "@conceptory/viewer",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@wooorm/starry-night": "catalog:",
+    "cytoscape": "catalog:",
+    "cytoscape-fcose": "catalog:",
+    "github-markdown-css": "catalog:",
+    "mathjax": "catalog:",
+    "mermaid": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "vscode-oniguruma": "catalog:"
+  },
+  "devDependencies": {
+    "@conceptory/tsconfig": "workspace:*",
+    "@tailwindcss/vite": "catalog:",
+    "@types/cytoscape-fcose": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "oxc-transform-react": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}
