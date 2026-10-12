@@ -1,0 +1,14 @@
+[package]
+name = "conceptory_files"
+description = "conceptory feature that checks repository file naming conventions"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+conceptory_diagnostic.workspace = true
+globset.workspace = true
+ignore.workspace = true
+
+[lints]
+workspace = true
