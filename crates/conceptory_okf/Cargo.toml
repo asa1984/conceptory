@@ -1,0 +1,21 @@
+[package]
+name = "conceptory_okf"
+description = "conceptory feature that checks OKF bundles and generates textlint dictionaries from documents"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+ammonia.workspace = true
+conceptory_diagnostic.workspace = true
+jsonschema.workspace = true
+comrak.workspace = true
+serde.workspace = true
+serde-saphyr.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+
+[lints]
+workspace = true
