@@ -1,0 +1,19 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:best-practices", "./javascript.json5", "./nix.json5", "./rust.json5"],
+  timezone: "Asia/Tokyo",
+  schedule: ["* * * * 5,6"],
+  // Override the Monday schedule set by config:best-practices.
+  lockFileMaintenance: {
+    schedule: ["* * * * 5,6"],
+  },
+  packageRules: [
+    {
+      matchUpdateTypes: ["minor", "patch"],
+      matchCurrentVersion: "!/^0/",
+      groupName: "non-major dependencies",
+      groupSlug: "non-major",
+      automerge: true,
+    },
+  ],
+}
