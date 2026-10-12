@@ -51,7 +51,7 @@ OKF bundle の文書は Markdown のファイルなので、文書の本文と�
 
 サーバーは `127.0.0.1` だけで待ち受け、Host ヘッダーと Origin ヘッダーが自身を指さないリクエストを拒否する[^vite-cve]。API は GET だけを受け付け、文書はファイルシステムを直接開かずに読み込み済みの識別子で引く。
 
-Markdown の解析には comrak を使い、検査と表示で同じパーサーを使う[^comrak]。これまで検査に使っていた pulldown-cmark は、拡張 autolink と見出しのアンカーの生成に対応していない。comrak は GFM の仕様に適合し、GitHub の alert と見出しのアンカーの規則と数式と emoji の shortcode にも対応する[^github-writing]。comrak が出力した HTML は ammonia でサニタイズする。
+Markdown の解析には comrak を使い、検査と表示で同じパーサーを使う[^comrak]。これまで検査に使っていた pulldown-cmark は、拡張 autolink と見出しのアンカーの生成に対応していない。comrak は GFM の仕様に適合し、GitHub の alert と見出しのアンカーの付け方と数式と emoji の shortcode にも対応する[^github-writing]。comrak が出力した HTML は ammonia でサニタイズする。
 
 Rust 側で行えない処理はブラウザ側で行う。Mermaid の図は mermaid.js で、数式は GitHub と同じ MathJax で描画する。コードのシンタックスハイライトには、GitHub と同じ文法を使う starry-night を使い、見た目には github-markdown-css を使う。MathJax のフォントと拡張、starry-night の正規表現エンジンは何も指定しなければ CDN から読み込まれる。これらは viewer の成果物に同梱し、viewer が外部のサーバーと通信しないようにする。
 

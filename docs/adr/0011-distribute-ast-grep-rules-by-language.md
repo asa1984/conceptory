@@ -19,7 +19,7 @@ sources:
 
 ## Context and Problem Statement
 
-conceptory は、lint で表せない規則を ast-grep のルールで検査する。最初のルールは TypeScript 向けに書き、npm の workspace パッケージとして置いた。しかし Rust など他の言語のルールも定める予定であり、npm で配ると Rust だけのリポジトリにも Node.js が必要になる。言語ごとのルールをどのように置き、下流のリポジトリへどのように配るべきか。
+conceptory は、lint で表せない規約を ast-grep のルールで検査する。最初のルールは TypeScript 向けに書き、npm の workspace パッケージとして置いた。しかし Rust など他の言語のルールも定める予定であり、npm で配ると Rust だけのリポジトリにも Node.js が必要になる。言語ごとのルールをどのように置き、下流のリポジトリへどのように配るべきか。
 
 ## Decision Drivers
 

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/asa1984/conceptory/schemas/document.schema.json",
   "title": "OKF document",
-  "description": "すべての concept document に共通する frontmatter の規則",
+  "description": "すべての concept document に共通する frontmatter の規約",
   "type": "object",
   "required": ["type"],
   "properties": {

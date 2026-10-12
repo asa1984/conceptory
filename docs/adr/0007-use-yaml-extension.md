@@ -40,7 +40,7 @@ YAML のメディアタイプを登録した RFC 9512 は、拡張子として `
 
 リポジトリで管理する YAML のファイルの拡張子は `.yaml` にし、`.yml` は使わない。ただし、ツールが名前を決めて生成するファイルは対象から外す。たとえば ast-grep の `sg test` は、`__snapshots__` ディレクトリに `<ルール名>-snapshot.yml` という名前でスナップショットを生成し、この名前は変更できない。ツールが `.yml` の名前でしか設定ファイルを読まない場合も、対象から外してよい。
 
-この規範は conceptory CLI の機能として `conceptory files check` で検査する。`conceptory files check` は `.gitignore` で除外されていないファイルを走査し、拡張子が `.yml` のファイルを報告する。ast-grep のスナップショットは、指定しなくても検査から外す。ほかに対象から外すファイルは `--exclude` に glob のパターンで渡し、外す理由をタスクの定義のコメントに書く。実装は `crates/conceptory_files` に置く。
+この規約は conceptory CLI の機能として `conceptory files check` で検査する。`conceptory files check` は `.gitignore` で除外されていないファイルを走査し、拡張子が `.yml` のファイルを報告する。ast-grep のスナップショットは、指定しなくても検査から外す。ほかに対象から外すファイルは `--exclude` に glob のパターンで渡し、外す理由をタスクの定義のコメントに書く。実装は `crates/conceptory_files` に置く。
 
 ### Consequences
 

@@ -11,7 +11,7 @@ use clap::{Parser, Subcommand};
 use conceptory_okf::{Diagnostic, Schemas};
 
 #[derive(Parser)]
-#[command(version, about = "conceptory が配布する規範を扱う")]
+#[command(version, about = "conceptory が配布する規約を扱う")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -19,7 +19,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
-    #[command(subcommand, about = "リポジトリのファイル名の規範を検査する")]
+    #[command(subcommand, about = "リポジトリのファイル名の規約を検査する")]
     Files(FilesCommand),
     #[command(
         subcommand,
