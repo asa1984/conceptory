@@ -1,0 +1,19 @@
+[package]
+name = "conceptory"
+description = "CLI for the norms that conceptory distributes"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "conceptory"
+path = "src/main.rs"
+
+[dependencies]
+clap.workspace = true
+conceptory_files.workspace = true
+conceptory_okf.workspace = true
+conceptory_server.workspace = true
+
+[lints]
+workspace = true
