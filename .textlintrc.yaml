@@ -1,0 +1,25 @@
+# textlint configuration (ADR 0005 "Check Japanese in two stages")
+filters:
+  comments: true
+rules:
+  preset-ja-technical-writing:
+    # Documents use the plain (dearu) style (guides/japanese-writing.md).
+    no-mix-dearu-desumasu:
+      preferInHeader: ""
+      preferInBody: である
+      preferInList: である
+      strict: true
+  "@textlint-ja/preset-ai-writing": true
+  preset-ai-words-ja:
+    no-ai-words:
+      # Dictionary-based rules can also flag correct usage, so report them as warnings.
+      severity: warning
+      # Generated from the style guides' vocabulary by `conceptory okf vocabulary`.
+      dictionaryPath: ./.textlint/vocabulary.json
+      # Words used legitimately throughout conceptory's documents.
+      allows:
+        - 検査
+  prh:
+    # Generated from the documents' terms by `conceptory okf terms`.
+    rulePaths:
+      - ./.textlint/prh.yaml
