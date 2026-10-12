@@ -1,0 +1,19 @@
+{
+  "name": "@conceptory/vite-plus-config",
+  "private": true,
+  "description": "Baseline lint, fmt, and test configs for Vite+",
+  "type": "module",
+  "exports": {
+    "./lint": "./lint.ts",
+    "./fmt": "./fmt.ts",
+    "./test": "./test.ts"
+  },
+  "devDependencies": {
+    "@conceptory/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "peerDependencies": {
+    "vite-plus": "^1.1.0"
+  }
+}
