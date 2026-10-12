@@ -1,7 +1,7 @@
 ---
 type: ADR
 title: TypeScript のベースラインを tsconfig、oxlint、oxfmt、ast-grep で定める
-description: TypeScript 7 以降と Native ESM を前提に、型検査の厳しさに関わる設定とモダンな書き方の規則を配布物で定め、静的に検査する。
+description: TypeScript 7 以降と Native ESM を前提に、型検査の厳しさに関わる設定とモダンな書き方の規約を配布物で定め、静的に検査する。
 tags:
   - typescript
   - lint
@@ -21,13 +21,13 @@ sources:
 
 ## Context and Problem Statement
 
-viewer の追加で、このリポジトリにも TypeScript のコードが入った。TypeScript の設定と書き方の規則をリポジトリごとに決めると、厳しさや書き方がリポジトリによって異なる。そうなると、リポジトリを移るたびに人間とエージェントが規則を読み直す必要がある。すべてのリポジトリで使う TypeScript のベースラインをどう定めるか。
+viewer の追加で、このリポジトリにも TypeScript のコードが入った。TypeScript の設定と書き方の規約をリポジトリごとに決めると、厳しさや書き方がリポジトリによって異なる。そうなると、リポジトリを移るたびに人間とエージェントが規約を読み直す必要がある。すべてのリポジトリで使う TypeScript のベースラインをどう定めるか。
 
 ## Decision Drivers
 
 - 型検査をできる限り厳しくすること
-- 書き方の規則を人間の注意ではなく静的な検査で守らせること
-- ツールの更新による規則の変化に気付けること
+- 書き方の規約を人間の注意ではなく静的な検査で守らせること
+- ツールの更新によるルールの変化に気付けること
 - 各リポジトリが設定をそのまま参照できること
 
 ## Considered Options
@@ -46,7 +46,7 @@ tsconfig は TypeScript 7 以降を前提とする。TypeScript 6.0 で `strict`
 
 oxlint のカテゴリのうち、correctness、suspicious、pedantic、perf、nursery はまるごと有効にする[^oxlint-categories]。style と restriction は書き方の好みや特定の機能の禁止を集めたカテゴリなので、ルールを個別に選ぶ。まるごと有効にしたカテゴリでも、方針に合わないルールや誤検知の多いルールは理由を書いて無効にする。Promise を返す関数をすべて async にする `promise-function-async` は使わない。Suspense のキャッシュは同じ Promise を返す必要があり、async にすると呼ぶたびに別の Promise になるからである。oxlint を更新するとカテゴリに含まれるルールが変わるので、有効なカテゴリのルールの一覧をスナップショットテストで記録し、増減を差分として確認してから受け入れる。oxfmt では import の並べ替えを有効にし、import の順序を決定的にする。
 
-書き方の規則は次のとおりである。oxlint で表せない規則は ast-grep のルールで検査する。
+書き方の規約は次のとおりである。oxlint で表せない規約は ast-grep のルールで検査する。
 
 - 関数はアロー関数で書く。`function` を使うのは、`this` の束縛やホイスティングが必要な箇所に限り、無効化のコメントに理由を書く。こうすると、`function` が必要な箇所がコードの中で目立つ。
 - 型の宣言は `type` で書く。公開ライブラリでは、利用者が宣言のマージで型を拡張できるよう `interface` を許す。
@@ -58,10 +58,10 @@ oxlint のカテゴリのうち、correctness、suspicious、pedantic、perf、n
 
 ### Consequences
 
-- Good: リポジトリが変わっても、同じ厳しさと同じ書き方の規則で TypeScript を書ける。
-- Good: 規則の違反は検査で見つかるので、レビューで指摘し合う必要がない。
+- Good: リポジトリが変わっても、同じ厳しさと同じ書き方の規約で TypeScript を書ける。
+- Good: 規約違反は検査で見つかるので、レビューで指摘し合う必要がない。
 - Good: oxlint の更新で増えたルールを、スナップショットの差分として確認してから受け入れられる。
-- Bad: 規則が厳しいので、ライブラリの型定義が緩い箇所では無効化のコメントが必要になる。
+- Bad: 規約が厳しいので、ライブラリの型定義が緩い箇所では無効化のコメントが必要になる。
 
 ### Confirmation
 
@@ -72,13 +72,13 @@ oxlint のカテゴリのうち、correctness、suspicious、pedantic、perf、n
 ### a. tsconfig、oxlint、oxfmt、ast-grep の設定を自前で定めて配布する
 
 - Good: Vite+ に同梱された oxlint と oxfmt をそのまま使える。
-- Good: oxlint で表せない規則も ast-grep で検査できる。
+- Good: oxlint で表せない規約も ast-grep で検査できる。
 - Bad: 設定を自分で保守する必要がある。
 
 ### b. `@tsconfig/strictest` などの既存の共有設定を使う
 
 - Good: 保守を他者に任せられる。
-- Bad: tsconfig しかなく、書き方の規則や lint の設定は別に決める必要がある。
+- Bad: tsconfig しかなく、書き方の規約や lint の設定は別に決める必要がある。
 - Bad: TypeScript 7 の既定値を前提にしていない。
 
 ### c. リポジトリごとに決める

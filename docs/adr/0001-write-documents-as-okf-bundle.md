@@ -42,9 +42,9 @@ conceptory は ADR や原則などのドキュメントを制定し、下流の�
 
 採用した選択肢: **a**
 
-OKF はベンダーに依存しない公開仕様であり、文書の種類を表す `type` と文書どうしのリンクの規則だけを定める[^okf-spec]。conceptory が必要とするフィールドはこの上に追加できるので、規約を一から設計する必要がない。
+OKF はベンダーに依存しない公開仕様であり、文書の種類を表す `type` と文書どうしのリンクの規約だけを定める[^okf-spec]。conceptory が必要とするフィールドはこの上に追加できるので、規約を一から設計する必要がない。
 
-OKF は、YAML frontmatter 付きの Markdown ファイルを収めたディレクトリツリーを **OKF bundle** と呼ぶ。その最上位のディレクトリが OKF bundle のルートである。リポジトリのドキュメントは `docs/` を OKF bundle として書き、ルートの `index.md` で `okf_version` を宣言する。conceptory は、下流へ配布する規範を別の OKF bundle の `guides/` に置く（[ADR 0006](0006-express-norms-as-distributed-artifacts.md)）。各ディレクトリには配下の文書を一覧にする `index.md` を置く。`type` の値は文書の種類ごとに ADR で定め、ADR 自身の `type` は `ADR` とする。
+OKF は、YAML frontmatter 付きの Markdown ファイルを収めたディレクトリツリーを **OKF bundle** と呼ぶ。その最上位のディレクトリが OKF bundle のルートである。リポジトリのドキュメントは `docs/` を OKF bundle として書き、ルートの `index.md` で `okf_version` を宣言する。conceptory は、下流へ配布する規約を別の OKF bundle の `guides/` に置く（[ADR 0006](0006-express-norms-as-distributed-artifacts.md)）。各ディレクトリには配下の文書を一覧にする `index.md` を置く。`type` の値は文書の種類ごとに ADR で定め、ADR 自身の `type` は `ADR` とする。
 
 OKF は `/` で始まるパスを OKF bundle のルートを起点に解釈し、この書き方を **bundle-relative** と呼ぶ。frontmatter のうちパスを値に取るフィールドには bundle-relative のパスを書く。どの文書から参照しても同じ値になるので、機械的に扱いやすいからである。一方で本文中のリンクには相対パスを書く。GitHub は `/` で始まるリンクをリポジトリのルートを起点に解決するので、本文に bundle-relative のパスを書くと GitHub 上でリンクが切れる。
 
@@ -58,7 +58,7 @@ OKF の `status` は使わない。文書は `deprecated-by` を持たない限�
 - Good: 仕様が小さいので、検査ツールを自前で実装しやすい。
 - Bad: OKF は 2026-06 に公開されたばかりであり、今後の改訂に破壊的な変更を含む可能性がある。
 - Bad: `deprecated-by` は conceptory 独自のフィールドなので、ほかの OKF consumer は廃止された文書も `stable` として扱う。
-- Bad: frontmatter と本文でパスの書き方が異なるので、書き手は2つの規則を使い分ける必要がある。
+- Bad: frontmatter と本文でパスの書き方が異なるので、書き手は2つの書き方を使い分ける必要がある。
 
 ### Confirmation
 
@@ -80,7 +80,7 @@ OKF の `status` は使わない。文書は `deprecated-by` を持たない限�
 
 ### c. frontmatter を持たない Markdown
 
-- Good: 書くための規則がなく、負担が最も小さい。
+- Good: 書くための規約がなく、負担が最も小さい。
 - Bad: 文書の種類や廃止の有無を機械的に読み取れないので、検査ツールを作れない。
 
 ## More Information

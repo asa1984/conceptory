@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/asa1984/conceptory/schemas/adr.schema.json",
   "title": "ADR",
-  "description": "ADR の frontmatter の規則",
+  "description": "ADR の frontmatter の規約",
   "allOf": [{ "$ref": "document.schema.json" }],
   "type": "object",
   "required": ["type", "title", "description", "tags", "generated"],

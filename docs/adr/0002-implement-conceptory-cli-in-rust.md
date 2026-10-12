@@ -1,7 +1,7 @@
 ---
 type: ADR
 title: conceptory CLI を Rust で実装し OKF 周りの機能をその1つとして提供する
-description: conceptory が配布する規範を扱う CLI を Rust で実装し、OKF bundle の検査と辞書の生成をその機能の1つとして提供する。
+description: conceptory が配布する規約を扱う CLI を Rust で実装し、OKF bundle の検査と辞書の生成をその機能の1つとして提供する。
 tags:
   - okf
   - tooling
@@ -21,14 +21,14 @@ sources:
 
 ## Context and Problem Statement
 
-[ADR 0001](0001-write-documents-as-okf-bundle.md) で、ドキュメントを OKF bundle として書くと決めた。conceptory は OKF の上に `deprecated-by` やリンクの書き方などの独自の規則を追加しているので、OKF への適合とあわせてこれらの規則も検査する必要がある。リンク切れや `index.md` との不整合のように、検査の多くはファイル単体ではなく OKF bundle 全体を見なければ判定できない。さらに conceptory は、今後も OKF 以外の規範を扱うツールを配布する。これらの検査や生成をどのようなツールで行うべきか。
+[ADR 0001](0001-write-documents-as-okf-bundle.md) で、ドキュメントを OKF bundle として書くと決めた。conceptory は OKF の上に `deprecated-by` やリンクの書き方などの独自の規約を追加しているので、OKF への適合とあわせてこれらの規約も検査する必要がある。リンク切れや `index.md` との不整合のように、検査の多くはファイル単体ではなく OKF bundle 全体を見なければ判定できない。さらに conceptory は、今後も OKF 以外の規約を扱うツールを配布する。これらの検査や生成をどのようなツールで行うべきか。
 
 ## Decision Drivers
 
 - OKF bundle 全体を対象にした検査を書けること
 - TypeScript 以外のリポジトリでも Node.js なしで動かせること
 - Nix でパッケージ化して配布しやすいこと
-- conceptory 独自の規則を中心に、機能を追加していけること
+- conceptory 独自の規約を中心に、機能を追加していけること
 
 ## Considered Options
 
@@ -41,9 +41,9 @@ sources:
 
 採用した選択肢: **a**
 
-Rust で実装すれば単一のバイナリになるので、Node.js を持たないリポジトリにも Nix でそのまま配布できる。既存の Markdown linter はファイル単位の検査を前提にしており、OKF bundle 全体を見る検査の多くを plugin として書きにくい。既存の OKF 用のツールは OKF の仕様への適合しか検査せず、conceptory 独自の規則と食い違う判定もする。
+Rust で実装すれば単一のバイナリになるので、Node.js を持たないリポジトリにも Nix でそのまま配布できる。既存の Markdown linter はファイル単位の検査を前提にしており、OKF bundle 全体を見る検査の多くを plugin として書きにくい。既存の OKF 用のツールは OKF の仕様への適合しか検査せず、conceptory 独自の規約と食い違う判定もする。
 
-conceptory が配布する規範を扱う CLI を **conceptory CLI** と呼び、コマンド名は `conceptory` とする。OKF 周りの機能は conceptory CLI の機能の1つであり、`conceptory okf` のサブコマンドにまとめる。
+conceptory が配布する規約を扱う CLI を **conceptory CLI** と呼び、コマンド名は `conceptory` とする。OKF 周りの機能は conceptory CLI の機能の1つであり、`conceptory okf` のサブコマンドにまとめる。
 
 | サブコマンド                | 内容                                              |
 | --------------------------- | ------------------------------------------------- |
@@ -79,7 +79,7 @@ Rust のコードには厳しい lint を適用する。clippy の `all`、`peda
 
 ### Confirmation
 
-conceptory の CI で `conceptory okf check` を `docs/` と `guides/` に対して実行する。conceptory CLI 自身は、規則ごとに適合する OKF bundle と違反する OKF bundle を fixture として用意してテストする。clippy と rustfmt の検査も CI で実行する。
+conceptory の CI で `conceptory okf check` を `docs/` と `guides/` に対して実行する。conceptory CLI 自身は、ルールごとに適合する OKF bundle と違反する OKF bundle を fixture として用意してテストする。clippy と rustfmt の検査も CI で実行する。
 
 ## Pros and Cons of the Options
 
@@ -104,15 +104,15 @@ conceptory の CI で `conceptory okf check` を `docs/` と `guides/` に対し
 ### d. 既存の OKF 用のツールを使う
 
 - Good: OKF の仕様への適合の検査を既存の実装に任せられる。
-- Bad: 本文の bundle-relative リンクを正しいと判定するなど、conceptory 独自の規則と食い違う判定をする。
-- Bad: 検査結果に行番号と規則の識別子がなく、conceptory 独自の検査と同じ形式で報告できない。
+- Bad: 本文の bundle-relative リンクを正しいと判定するなど、conceptory 独自の規約と食い違う判定をする。
+- Bad: 検査結果に行番号とルールの識別子がなく、conceptory 独自の検査と同じ形式で報告できない。
 - Bad: `index.md` の生成と frontmatter の整形が conceptory の書式と両立しない。
 
 ## More Information
 
-2026-10-10 に、Rust 製の OKF 用ツールである W4G1/okf の 0.2.7（crate の okf と okf-validator）を評価した[^okf-crate]。conceptory の OKF bundle は OKF v0.2 に適合すると判定されたが、conceptory 独自の規則は検査されず、選択肢 d の Bad に挙げた食い違いがあった。置き換えられる部分は OKF の仕様への適合の検査だけであり、依存先としても個人が保守する 0.x の crate なので採用しなかった。行番号と規則の識別子が検査結果に付いた時点で、改めて評価する。
+2026-10-10 に、Rust 製の OKF 用ツールである W4G1/okf の 0.2.7（crate の okf と okf-validator）を評価した[^okf-crate]。conceptory の OKF bundle は OKF v0.2 に適合すると判定されたが、conceptory 独自の規約は検査されず、選択肢 d の Bad に挙げた食い違いがあった。置き換えられる部分は OKF の仕様への適合の検査だけであり、依存先としても個人が保守する 0.x の crate なので採用しなかった。行番号とルールの識別子が検査結果に付いた時点で、改めて評価する。
 
-コマンド名に `okf` を使わないのは、この名前の OKF 用ツールが crates.io、PyPI、GitHub にすでに複数あるからである。conceptory CLI は OKF の仕様にない規則を検査するので、OKF の汎用ツールと誤解される名前も避けた。
+コマンド名に `okf` を使わないのは、この名前の OKF 用ツールが crates.io、PyPI、GitHub にすでに複数あるからである。conceptory CLI は OKF の仕様にない規約を検査するので、OKF の汎用ツールと誤解される名前も避けた。
 
 用語の検査は [ADR 0003](0003-define-terms-in-frontmatter.md) で定める。conceptory CLI はその検査で使う辞書も生成する。
 

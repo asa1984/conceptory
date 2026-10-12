@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/asa1984/conceptory/schemas/style-guide.schema.json",
   "title": "StyleGuide",
-  "description": "文章の書き方などの規範を定めるスタイルガイドの frontmatter の規則",
+  "description": "スタイルガイド（文章の書き方などの規約を定める文書）の frontmatter の規約",
   "allOf": [
     {
       "$ref": "document.schema.json"
