@@ -1,0 +1,15 @@
+id: tsx/no-function
+valid:
+  - |
+    const f = (x: number) => x;
+  - |
+    function* generate() {}
+  - |
+    declare function overloaded(x: string): void;
+invalid:
+  - |
+    function f() {}
+  - |
+    const f = function () {};
+  - |
+    export default function () {}

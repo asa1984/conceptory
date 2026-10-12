@@ -1,0 +1,15 @@
+id: tsx/use-effect-cleanup
+valid:
+  - |
+    useEffect(() => { const id = setInterval(tick, 1000); return () => clearInterval(id); }, []);
+  - |
+    useEffect(() => subscribe(store));
+  - |
+    useLayoutEffect(() => { const frame = requestAnimationFrame(draw); return () => cancelAnimationFrame(frame); });
+invalid:
+  - |
+    useEffect(() => { track(); }, []);
+  - |
+    useLayoutEffect(() => { node.focus(); });
+  - |
+    useEffect(() => { if (ready) { return () => stop(); } });

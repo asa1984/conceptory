@@ -1,0 +1,19 @@
+id: typescript/labeled-arguments
+valid:
+  - |
+    const f = (x: number) => x;
+  - |
+    const f = ({ a, b }: { a: number; b: number }) => a + b;
+  - |
+    [1, 2].map((x, i) => x + i);
+  - |
+    items.sort((a, b) => a - b);
+invalid:
+  - |
+    const f = (a: number, b: number) => a + b;
+  - |
+    class C { f(a: number, b: number) {} }
+  - |
+    class C { constructor(a: number, b: number) {} }
+  - |
+    const o = { f: (a: number, b?: number) => a };

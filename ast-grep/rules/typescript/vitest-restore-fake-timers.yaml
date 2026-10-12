@@ -1,0 +1,37 @@
+id: typescript/vitest-restore-fake-timers
+language: TypeScript
+severity: error
+message: フェイクタイマーを使うテストのファイルでは、vi.useRealTimers() で元に戻す。
+note: テストのファイルを分離しない設定では、フェイクタイマーがほかのテストのファイルにも残る。afterEach などで vi.useRealTimers() を呼ぶ。
+files:
+  - "**/*.{test,spec}.{ts,mts,cts,tsx}"
+rule:
+  any:
+    - pattern: vi.useFakeTimers($$$)
+    - pattern: vi.setSystemTime($$$)
+  not:
+    inside:
+      kind: program
+      stopBy: end
+      has:
+        pattern: vi.useRealTimers()
+        stopBy: end
+---
+id: tsx/vitest-restore-fake-timers
+language: Tsx
+severity: error
+message: フェイクタイマーを使うテストのファイルでは、vi.useRealTimers() で元に戻す。
+note: テストのファイルを分離しない設定では、フェイクタイマーがほかのテストのファイルにも残る。afterEach などで vi.useRealTimers() を呼ぶ。
+files:
+  - "**/*.{test,spec}.{ts,mts,cts,tsx}"
+rule:
+  any:
+    - pattern: vi.useFakeTimers($$$)
+    - pattern: vi.setSystemTime($$$)
+  not:
+    inside:
+      kind: program
+      stopBy: end
+      has:
+        pattern: vi.useRealTimers()
+        stopBy: end

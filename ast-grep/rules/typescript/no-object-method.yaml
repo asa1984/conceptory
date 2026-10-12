@@ -1,0 +1,23 @@
+id: typescript/no-object-method
+language: TypeScript
+severity: error
+message: オブジェクトリテラルではメソッド記法の代わりにアロー関数のプロパティを使う。
+note: getter と setter は対象外である。
+rule:
+  kind: method_definition
+  inside:
+    kind: object
+  not:
+    regex: ^(get|set)\s
+---
+id: tsx/no-object-method
+language: Tsx
+severity: error
+message: オブジェクトリテラルではメソッド記法の代わりにアロー関数のプロパティを使う。
+note: getter と setter は対象外である。
+rule:
+  kind: method_definition
+  inside:
+    kind: object
+  not:
+    regex: ^(get|set)\s

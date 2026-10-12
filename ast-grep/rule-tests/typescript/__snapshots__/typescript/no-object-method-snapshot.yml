@@ -1,0 +1,24 @@
+id: typescript/no-object-method
+snapshots:
+  ? |
+    const o = { async f() {} };
+  : labels:
+      - source: async f() {}
+        style: primary
+        start: 12
+        end: 24
+      - source: "{ async f() {} }"
+        style: secondary
+        start: 10
+        end: 26
+  ? |
+    const o = { f(x: number) { return x; } };
+  : labels:
+      - source: "f(x: number) { return x; }"
+        style: primary
+        start: 12
+        end: 38
+      - source: "{ f(x: number) { return x; } }"
+        style: secondary
+        start: 10
+        end: 40

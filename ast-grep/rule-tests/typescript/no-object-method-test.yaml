@@ -1,0 +1,13 @@
+id: typescript/no-object-method
+valid:
+  - |
+    const o = { f: (x: number) => x };
+  - |
+    const o = { get v() { return 1; }, set v(x: number) {} };
+  - |
+    class C { f() {} }
+invalid:
+  - |
+    const o = { f(x: number) { return x; } };
+  - |
+    const o = { async f() {} };

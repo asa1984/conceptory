@@ -1,0 +1,77 @@
+id: typescript/use-effect-cleanup
+language: TypeScript
+severity: error
+message: useEffect などのエフェクトは、効果を取り消すクリーンアップ関数を返す。
+note: アンマウントしたコンポーネントの影響を残さないためである。クリーンアップできない処理は、イベントハンドラーなどエフェクト以外の場所で行う。
+rule:
+  kind: call_expression
+  has:
+    field: function
+    regex: ^(React\.)?(useEffect|useLayoutEffect|useInsertionEffect)$
+  any:
+    - has:
+        field: arguments
+        has:
+          nthChild: 1
+          kind: arrow_function
+          has:
+            field: body
+            kind: statement_block
+            not:
+              has:
+                kind: return_statement
+                has:
+                  any:
+                    - kind: arrow_function
+                    - kind: identifier
+                    - kind: member_expression
+                    - kind: call_expression
+    - has:
+        field: arguments
+        has:
+          nthChild: 1
+          kind: arrow_function
+          has:
+            field: body
+            any:
+              - kind: assignment_expression
+              - kind: update_expression
+---
+id: tsx/use-effect-cleanup
+language: Tsx
+severity: error
+message: useEffect などのエフェクトは、効果を取り消すクリーンアップ関数を返す。
+note: アンマウントしたコンポーネントの影響を残さないためである。クリーンアップできない処理は、イベントハンドラーなどエフェクト以外の場所で行う。
+rule:
+  kind: call_expression
+  has:
+    field: function
+    regex: ^(React\.)?(useEffect|useLayoutEffect|useInsertionEffect)$
+  any:
+    - has:
+        field: arguments
+        has:
+          nthChild: 1
+          kind: arrow_function
+          has:
+            field: body
+            kind: statement_block
+            not:
+              has:
+                kind: return_statement
+                has:
+                  any:
+                    - kind: arrow_function
+                    - kind: identifier
+                    - kind: member_expression
+                    - kind: call_expression
+    - has:
+        field: arguments
+        has:
+          nthChild: 1
+          kind: arrow_function
+          has:
+            field: body
+            any:
+              - kind: assignment_expression
+              - kind: update_expression
