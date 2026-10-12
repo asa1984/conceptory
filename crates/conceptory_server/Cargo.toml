@@ -1,0 +1,24 @@
+[package]
+name = "conceptory_server"
+description = "Local server for the OKF bundle viewer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+axum.workspace = true
+conceptory_okf.workspace = true
+notify-debouncer-full.workspace = true
+opener.workspace = true
+rust-embed.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tokio-stream.workspace = true
+
+[dev-dependencies]
+http-body-util.workspace = true
+tower.workspace = true
+
+[lints]
+workspace = true
