@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/asa1984/conceptory/schemas/style-guide.schema.json",
+  "title": "StyleGuide",
+  "description": "文章の書き方などの規範を定めるスタイルガイドの frontmatter の規則",
+  "allOf": [
+    {
+      "$ref": "document.schema.json"
+    }
+  ],
+  "type": "object",
+  "required": ["type", "title", "description", "tags", "generated"],
+  "properties": {
+    "type": {
+      "const": "StyleGuide"
+    },
+    "vocabulary": {
+      "description": "避ける語の一覧。conceptory okf vocabulary が textlint-rule-preset-ai-words-ja の辞書を生成する",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["avoid", "prefer"],
+        "properties": {
+          "avoid": {
+            "description": "避ける語。tokens がなければ基本形として照合し、あれば検査結果の表示に使う",
+            "type": "string",
+            "minLength": 1
+          },
+          "prefer": {
+            "description": "代わりに使う語",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "pos": {
+            "description": "一致させる品詞（kuromoji の pos）",
+            "type": "string",
+            "minLength": 1
+          },
+          "pos-detail": {
+            "description": "一致させる品詞細分類（kuromoji の pos_detail_1）",
+            "type": "string",
+            "minLength": 1
+          },
+          "tokens": {
+            "description": "複数の語にまたがる表現を照合するときのトークンの並び。kuromoji で分割したトークンと先頭から順に照合する",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "anyOf": [
+                {
+                  "required": ["surface"]
+                },
+                {
+                  "required": ["base"]
+                }
+              ],
+              "properties": {
+                "surface": {
+                  "description": "一致させる表層形（kuromoji の surface_form）",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "base": {
+                  "description": "一致させる基本形（kuromoji の basic_form）",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "pos": {
+                  "description": "一致させる品詞（kuromoji の pos）",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "pos-detail": {
+                  "description": "一致させる品詞細分類（kuromoji の pos_detail_1）",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false,
+        "not": {
+          "description": "tokens を書くときは、品詞もトークンごとに書く",
+          "anyOf": [
+            {
+              "required": ["tokens", "pos"]
+            },
+            {
+              "required": ["tokens", "pos-detail"]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,5 @@
+# Generated from frontmatter by `conceptory okf index` (ADR 0005 "Check Japanese in two stages")
+**/index.md
+# Symlinks to documents and templates under docs/, which are checked at the link targets (ADR 0004 "Define style guides for skills")
+skills/*/references/**
+skills/*/assets/**

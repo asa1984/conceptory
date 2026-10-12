@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/asa1984/conceptory/schemas/document.schema.json",
+  "title": "OKF document",
+  "description": "すべての concept document に共通する frontmatter の規則",
+  "type": "object",
+  "required": ["type"],
+  "properties": {
+    "type": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "resource": { "type": "string", "minLength": 1 },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "generated": {
+      "type": "object",
+      "required": ["by"],
+      "properties": {
+        "by": { "type": "string", "minLength": 1 },
+        "at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["resource"],
+        "properties": {
+          "resource": { "type": "string", "minLength": 1 },
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "author": { "type": "string", "minLength": 1 },
+          "usage_count": { "type": "integer", "minimum": 0 },
+          "last_modified": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "deprecated-by": { "type": "string", "minLength": 1 },
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term"],
+        "properties": {
+          "term": { "type": "string", "minLength": 1 },
+          "avoid": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "status": {
+      "description": "status は使わず、deprecated-by で廃止を表す。conceptory CLI は no-status として報告する",
+      "not": {}
+    }
+  }
+}
