@@ -1,0 +1,45 @@
+{
+  "skillOverrides": {
+    "yomiyasu": "off",
+    "yomiyasu:yomiyasu": "off"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && direnv export bash >> \"$CLAUDE_ENV_FILE\" 2>/dev/null || true",
+            "timeout": 300,
+            "statusMessage": "Loading direnv"
+          }
+        ]
+      }
+    ],
+    "FileChanged": [
+      {
+        "matcher": ".envrc|flake.nix|flake.lock",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && direnv export bash >> \"$CLAUDE_ENV_FILE\" 2>/dev/null || true",
+            "timeout": 300,
+            "statusMessage": "Reloading direnv"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; cd \"$CLAUDE_PROJECT_DIR\" && direnv exec . scripts/format-file.sh \"$f\"; } >/dev/null 2>&1 || true",
+            "statusMessage": "Formatting"
+          }
+        ]
+      }
+    ]
+  }
+}

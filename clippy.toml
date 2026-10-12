@@ -1,0 +1,15 @@
+# Keep the MSRV in sync with rust-version in Cargo.toml and channel in rust-toolchain.toml
+msrv = "1.99.0"
+
+# Apply lints meant for public APIs to private items as well
+check-private-items = true
+
+# Allow unwrap / expect / dbg! in test code
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-dbg-in-tests = true
+
+# Use stricter complexity thresholds than the defaults
+cognitive-complexity-threshold = 15 # default: 25
+too-many-arguments-threshold = 5    # default: 7
+type-complexity-threshold = 200     # default: 250

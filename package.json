@@ -1,0 +1,18 @@
+{
+  "name": "conceptory",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@conceptory/tsconfig": "workspace:*",
+    "@conceptory/vite-plus-config": "workspace:*",
+    "@textlint-ja/textlint-rule-preset-ai-writing": "catalog:",
+    "@types/node": "catalog:",
+    "textlint": "catalog:",
+    "textlint-filter-rule-comments": "catalog:",
+    "textlint-rule-preset-ai-words-ja": "catalog:",
+    "textlint-rule-preset-ja-technical-writing": "catalog:",
+    "textlint-rule-prh": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "packageManager": "pnpm@12.10.1"
+}
