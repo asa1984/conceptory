@@ -2,6 +2,7 @@
   "name": "@conceptory/vite-plus-config",
   "private": true,
   "description": "Baseline lint, fmt, and test configs for Vite+",
+  "license": "MIT",
   "type": "module",
   "exports": {
     "./lint": "./lint.ts",

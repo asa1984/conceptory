@@ -4,6 +4,7 @@ description = "conceptory feature that checks OKF bundles and generates textlint
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
+license.workspace = true
 
 [dependencies]
 ammonia.workspace = true

@@ -1,6 +1,7 @@
 {
   "name": "@conceptory/viewer",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "dependencies": {
     "@wooorm/starry-night": "catalog:",

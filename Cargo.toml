@@ -6,6 +6,7 @@ members = ["crates/*"]
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.99.0"
+license = "MIT"
 
 [workspace.dependencies]
 ammonia = "=4.2.1"

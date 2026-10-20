@@ -4,6 +4,7 @@ description = "Diagnostics reported by the features of the conceptory CLI"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
+license.workspace = true
 
 [dependencies]
 serde.workspace = true
