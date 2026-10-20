@@ -110,8 +110,8 @@ export default defineConfig({
         cache: false,
       },
       // Opens docs/ and guides/ in the viewer and keeps it in sync with file changes.
-      "okf:serve": {
-        command: "cargo run --quiet --package conceptory -- okf serve docs guides",
+      "okf:view": {
+        command: "cargo run --quiet --package conceptory -- okf view docs guides",
         cache: false,
       },
       textlint: {

@@ -1,4 +1,4 @@
-// Types of the data `conceptory okf serve` returns, and a fetch cache for reading it with Suspense.
+// Types of the data `conceptory okf view` returns, and a fetch cache for reading it with Suspense.
 //
 // `use` needs the same Promise object for the same data. Cache entries carry a version, and a
 // change notification from the server bumps the version so that a new Promise is created.

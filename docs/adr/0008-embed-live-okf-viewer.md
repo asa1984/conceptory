@@ -47,7 +47,7 @@ OKF bundle の文書は Markdown のファイルなので、文書の本文と�
 
 ファイルの変更を表示に反映するには、ファイルを監視してブラウザに通知する仕組みが必要になる。SPA を conceptory CLI のバイナリに埋め込めば、Node.js のないリポジトリでも同じ viewer を使える。
 
-`conceptory okf serve <roots>...` でローカルの HTTP サーバーを起動し、既定のブラウザで viewer を開く。サーバーは新しい crate の `conceptory_server` に実装し、axum と tokio を使う。ファイルの監視には notify-debouncer-full を使い、短い間隔の変更をまとめて受け取ってから OKF bundle を読み込み直す。読み込み直した結果は文書ごとのハッシュで前回と比べ、変わった文書の識別子を Server-Sent Events でブラウザに通知する。ブラウザはその文書だけを API から取得し直す。通知はサーバーからブラウザへの一方向なので、WebSocket ではなく Server-Sent Events を使う。
+`conceptory okf view <roots>...` でローカルの HTTP サーバーを起動し、既定のブラウザで viewer を開く。サーバーは新しい crate の `conceptory_server` に実装し、axum と tokio を使う。ファイルの監視には notify-debouncer-full を使い、短い間隔の変更をまとめて受け取ってから OKF bundle を読み込み直す。読み込み直した結果は文書ごとのハッシュで前回と比べ、変わった文書の識別子を Server-Sent Events でブラウザに通知する。ブラウザはその文書だけを API から取得し直す。通知はサーバーからブラウザへの一方向なので、WebSocket ではなく Server-Sent Events を使う。
 
 サーバーは `127.0.0.1` だけで待ち受け、Host ヘッダーと Origin ヘッダーが自身を指さないリクエストを拒否する[^vite-cve]。API は GET だけを受け付け、文書はファイルシステムを直接開かずに読み込み済みの識別子で引く。
 
