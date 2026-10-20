@@ -35,8 +35,12 @@ jobs:
         with:
           persist-credentials: false
       - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
-      - run: nix develop --command pnpm install --frozen-lockfile
-      - run: nix develop --command vp run check
+      - run: nix profile add .#tools
+      - run: pnpm install --frozen-lockfile
+        env:
+          COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+      - run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH"
+      - run: vp run check
 
   # With squash merges, the PR title becomes the commit subject.
   pr-title:
@@ -50,6 +54,9 @@ jobs:
         with:
           persist-credentials: false
       - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
-      - run: nix run --inputs-from . nixpkgs#cocogitto -- verify "$PR_TITLE"
+      - run: nix profile add .#tools
+      # Inside a git repository, cog reads user.name from the git config, which the runner does not set.
+      - run: cog verify "$PR_TITLE"
+        working-directory: ${{ runner.temp }}
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
