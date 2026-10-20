@@ -31,7 +31,7 @@ const mathjaxFiles = (): Plugin => ({
 
 /**
  * Proxy target for the API and files during development. Start
- * `conceptory okf serve <roots> --no-open --allow-origin http://localhost:5173` separately.
+ * `conceptory okf view <roots> --no-open --allow-origin http://localhost:5173` separately.
  */
 const backend = "http://127.0.0.1:7878";
 

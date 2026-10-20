@@ -90,7 +90,7 @@ enum OkfCommand {
     },
     #[command(about = "OKF bundle を閲覧する viewer \
                        をローカルで配信する。ファイルを編集すると表示に反映される")]
-    Serve {
+    View {
         #[arg(required = true, help = "OKF bundle のルート")]
         roots: Vec<PathBuf>,
         #[arg(
@@ -216,7 +216,7 @@ fn run_okf(command: OkfCommand) -> Result<ExitCode, Error> {
             )?;
             Ok(ExitCode::SUCCESS)
         },
-        OkfCommand::Serve {
+        OkfCommand::View {
             roots,
             schemas,
             port,
