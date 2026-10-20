@@ -5,13 +5,6 @@ packages:
   - packages/*
   - viewer
 
-# Nix fetchPnpmDeps expects the same hash on every system, so fetch the same set of native binaries
-# on any of the systems in flake.nix.
-supportedArchitectures:
-  os: [darwin, linux]
-  cpu: [arm64, x64]
-  libc: [glibc]
-
 # Make packages that depend on vite and vitest use the versions bundled with Vite+.
 overrides:
   vite@*: npm:@voidzero-dev/vite-plus-core@1.1.0
