@@ -50,6 +50,24 @@
           cargoArtifacts = craneLib.buildDepsOnly commonArgs;
           # rustfmt.toml uses nightly-only options, so take rustfmt alone from a pinned nightly.
           rustfmt = pkgs.rust-bin.nightly."2026-10-09".rustfmt;
+          # Tools for development and CI. The devShell and packages.tools both provide them.
+          tools = [
+            pkgs.nodejs_26
+            # corepack runs pnpm on its own Node.js, so build it with Node.js 26 instead of the default 24.
+            (pkgs.corepack.override { nodejs-slim = pkgs.nodejs-slim_26; })
+            # The nightly rustfmt and the toolchain both ship lib/rustlib, so let rustfmt win the collisions.
+            (lib.hiPrio rustfmt)
+            rustToolchain
+            pkgs.taplo
+            pkgs.ast-grep
+            pkgs.actionlint
+            pkgs.zizmor
+            pkgs.cocogitto
+            # Provides renovate-config-validator to check the Renovate presets.
+            pkgs.renovate
+            pkgs.nixfmt
+            pkgs.jq
+          ];
         in
         {
           _module.args.pkgs = import inputs.nixpkgs {
@@ -81,7 +99,12 @@
               inherit (finalAttrs) pname version src;
               pnpm = pkgs.pnpm_12;
               fetcherVersion = 4;
-              hash = "sha256-ir+c/+dnWh4k1n4Jg68RfnMxDRXfZW5nf1wZxsDHmUc=";
+              # pnpm leaves an empty v11/links in the store on darwin but not on Linux, which changes the hash.
+              # Offline installs only need v11/files and the index.
+              preFixup = ''
+                rm -rf "$storePath/v11/links"
+              '';
+              hash = "sha256-h2o21nLmTADAtgtIemFoVigtLFnEYa6QkTFeayD/5/0=";
             };
             nativeBuildInputs = [
               pkgs.nodejs_26
@@ -181,27 +204,22 @@
             );
           };
 
+          # Installed into a Nix profile in CI. Rust builds need a linker, so it includes a C compiler.
+          packages.tools = pkgs.buildEnv {
+            name = "conceptory-tools";
+            paths = tools ++ [ pkgs.stdenv.cc ];
+          };
+
           # Rust builds need a linker, so use mkShell, which includes a C compiler.
           devShells.default = pkgs.mkShell {
-            packages = [
-              pkgs.nodejs_26
-              # corepack runs pnpm on its own Node.js, so build it with Node.js 26 instead of the default 24.
-              (pkgs.corepack.override { nodejs-slim = pkgs.nodejs-slim_26; })
-              rustfmt
-              rustToolchain
-              pkgs.taplo
-              pkgs.ast-grep
-              pkgs.actionlint
-              pkgs.zizmor
-              pkgs.cocogitto
-              # Provides renovate-config-validator to check the Renovate presets.
-              pkgs.renovate
-              pkgs.nixfmt
-              pkgs.jq
-            ];
+            packages = tools;
             env = {
               COREPACK_ENABLE_DOWNLOAD_PROMPT = "0";
             };
+            # Make the commands installed by pnpm, such as vp, available without direnv as well.
+            shellHook = ''
+              export PATH="$PWD/node_modules/.bin:$PATH"
+            '';
           };
         };
     };
