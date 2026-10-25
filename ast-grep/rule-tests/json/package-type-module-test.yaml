@@ -1,0 +1,8 @@
+id: json/package-type-module
+valid:
+  - '{ "name": "a", "type": "module" }'
+  - '{ "name": "a", "type": "module", "imports": { "#/*": { "type": "x" } } }'
+invalid:
+  - '{ "name": "a" }'
+  - '{ "name": "a", "type": "commonjs" }'
+  - '{ "name": "a", "exports": { "type": "module" } }'

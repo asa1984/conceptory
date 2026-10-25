@@ -1,0 +1,21 @@
+id: json/package-type-module
+language: Json
+severity: error
+message: 'package.json に "type": "module" を書く。'
+note: '"type" がないと、Node.js はパッケージの .js を CommonJS として扱う。'
+files:
+  - "**/package.json"
+rule:
+  kind: object
+  inside:
+    kind: document
+  not:
+    has:
+      kind: pair
+      all:
+        - has:
+            field: key
+            regex: '^"type"$'
+        - has:
+            field: value
+            regex: '^"module"$'

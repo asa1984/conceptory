@@ -3,6 +3,7 @@
   "private": true,
   "description": "Baseline tsconfig for TypeScript 7 and later",
   "license": "MIT",
+  "type": "module",
   "exports": {
     "./base.json": "./base.json",
     "./node.json": "./node.json",

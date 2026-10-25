@@ -42,7 +42,7 @@ viewer の追加で、このリポジトリにも TypeScript のコードが入�
 
 tsconfig と Vite+ の設定は `packages/` 以下の workspace パッケージに置く。tsconfig は `@conceptory/tsconfig` に、Vite+ の `lint` と `fmt` の設定は `@conceptory/vite-plus-config` に置く。npm への公開とパッケージの名前は、配布の方法を決める ADR で改めて決める。ast-grep のルールは、ADR 0011「ast-grep のルールを言語ごとに分けて Nix flake で配布する」に従って `ast-grep/rules/typescript/` に置く。
 
-tsconfig は TypeScript 7 以降を前提とする。TypeScript 6.0 で `strict` や `noUncheckedSideEffectImports` などの既定値が変わったので[^typescript-6]、既定値で有効になる設定は書かない。既定値で無効な設定のうち、型検査の厳しさに関わるものはすべて有効にする。モジュールは Native ESM を前提とし、相対パスの import には拡張子を書く。Node.js が型を取り除いてそのまま実行できるよう、`erasableSyntaxOnly` も有効にする。設定は、Node.js 向けの `node.json`、バンドラー向けの `bundler.json`、公開ライブラリ向けの `library.json` に分ける。tsc は常に `noEmit` で型検査だけに使い、ビルドとバンドルはほかのツールに任せる。公開ライブラリ向けの `library.json` では、ほかのツールが型定義を出力できるよう `isolatedDeclarations` を有効にする。
+tsconfig は TypeScript 7 以降を前提とする。TypeScript 6.0 で `strict` や `noUncheckedSideEffectImports` などの既定値が変わったので[^typescript-6]、既定値で有効になる設定は書かない。既定値で無効な設定のうち、型検査の厳しさに関わるものはすべて有効にする。モジュールは Native ESM を前提とし、相対パスの import には拡張子を書く。そのため、すべての package.json に `"type": "module"` を書く。`"type"` がないと、Node.js やツールはパッケージの `.js` を CommonJS として扱う。Node.js が型を取り除いてそのまま実行できるよう、`erasableSyntaxOnly` も有効にする。設定は、Node.js 向けの `node.json`、バンドラー向けの `bundler.json`、公開ライブラリ向けの `library.json` に分ける。tsc は常に `noEmit` で型検査だけに使い、ビルドとバンドルはほかのツールに任せる。公開ライブラリ向けの `library.json` では、ほかのツールが型定義を出力できるよう `isolatedDeclarations` を有効にする。
 
 oxlint のカテゴリのうち、correctness、suspicious、pedantic、perf、nursery はまるごと有効にする[^oxlint-categories]。style と restriction は書き方の好みや特定の機能の禁止を集めたカテゴリなので、ルールを個別に選ぶ。まるごと有効にしたカテゴリでも、方針に合わないルールや誤検知の多いルールは理由を書いて無効にする。Promise を返す関数をすべて async にする `promise-function-async` は使わない。Suspense のキャッシュは同じ Promise を返す必要があり、async にすると呼ぶたびに別の Promise になるからである。oxlint を更新するとカテゴリに含まれるルールが変わるので、有効なカテゴリのルールの一覧をスナップショットテストで記録し、増減を差分として確認してから受け入れる。oxfmt では import の並べ替えを有効にし、import の順序を決定的にする。
 
@@ -65,7 +65,7 @@ oxlint のカテゴリのうち、correctness、suspicious、pedantic、perf、n
 
 ### Confirmation
 
-`vp check` は oxlint、oxfmt、型検査をまとめて実行し、`ast-grep scan` は ast-grep のルールで検査する。ast-grep のルールそのものは `ast-grep test` で、oxlint のカテゴリのルールの一覧は `vp test` のスナップショットテストで検査する。
+`vp check` は oxlint、oxfmt、型検査をまとめて実行し、`ast-grep scan` は ast-grep のルールで検査する。package.json の `"type"` は、ast-grep のルール `json/package-type-module` で検査する。ast-grep のルールそのものは `ast-grep test` で、oxlint のカテゴリのルールの一覧は `vp test` のスナップショットテストで検査する。
 
 ## Pros and Cons of the Options
 
