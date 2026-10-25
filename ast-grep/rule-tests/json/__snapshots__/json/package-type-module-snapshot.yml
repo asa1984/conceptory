@@ -1,0 +1,32 @@
+id: json/package-type-module
+snapshots:
+  '{ "name": "a" }':
+    labels:
+      - source: '{ "name": "a" }'
+        style: primary
+        start: 0
+        end: 15
+      - source: '{ "name": "a" }'
+        style: secondary
+        start: 0
+        end: 15
+  '{ "name": "a", "exports": { "type": "module" } }':
+    labels:
+      - source: '{ "name": "a", "exports": { "type": "module" } }'
+        style: primary
+        start: 0
+        end: 48
+      - source: '{ "name": "a", "exports": { "type": "module" } }'
+        style: secondary
+        start: 0
+        end: 48
+  '{ "name": "a", "type": "commonjs" }':
+    labels:
+      - source: '{ "name": "a", "type": "commonjs" }'
+        style: primary
+        start: 0
+        end: 35
+      - source: '{ "name": "a", "type": "commonjs" }'
+        style: secondary
+        start: 0
+        end: 35
