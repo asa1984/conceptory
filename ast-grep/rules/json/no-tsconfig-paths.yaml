@@ -1,0 +1,12 @@
+id: json/no-tsconfig-paths
+language: Json
+severity: error
+message: tsconfig の paths を使わない。エイリアスインポートのエイリアスは、package.json の imports に "#/*" として定める。
+note: package.json の imports は Node.js と TypeScript とバンドラーが同じ定義を読むが、tsconfig の paths は TypeScript しか読まない。
+files:
+  - "**/tsconfig*.json"
+rule:
+  kind: pair
+  has:
+    field: key
+    regex: '^"paths"$'

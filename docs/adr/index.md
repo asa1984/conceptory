@@ -15,3 +15,4 @@
 - [Vitest はテストのファイルを分離せずに実行し、状態を残す書き方を静的に検査する](0012-run-vitest-without-isolation.md) - Vitest の isolate を無効にしてモジュールの評価を減らし、モジュールのモックやグローバルの直接の書き換えのようにファイルをまたいで状態を残す書き方を oxlint と ast-grep で禁じる。
 - [依存の更新は Renovate の共有プリセットで配布し、Dependabot は脆弱性のアラートだけに使う](0013-distribute-renovate-presets.md) - Renovate のプリセットを renovate/ に置いて各リポジトリから参照させ、Dependabot はバージョンの更新に使わず脆弱性のアラートだけを有効にする。
 - [GitHub Actions のアクションはコミットの SHA で固定し、ワークフローを actionlint と zizmor で検査する](0014-harden-github-actions.md) - CI は Nix の devShell と flake の検査を GitHub Actions で実行し、アクションの固定と最小の権限を守らせ、ワークフローを静的に検査する。
+- [import alias は package.json の imports で定める](0015-use-package-imports-for-import-aliases.md) - パッケージの中のモジュールをエイリアスで import するときは、エイリアスを package.json の imports に "#/*" として定め、tsconfig の paths は使わない。
