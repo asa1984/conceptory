@@ -1,0 +1,22 @@
+id: json/no-tsconfig-paths
+snapshots:
+  "{\n  // Comments are allowed in tsconfig.\n  \"compilerOptions\": { \"paths\": {} }\n}\n":
+    labels:
+      - source: '"paths": {}'
+        style: primary
+        start: 64
+        end: 75
+      - source: '"paths"'
+        style: secondary
+        start: 64
+        end: 71
+  '{ "compilerOptions": { "paths": { "@/*": ["./src/*"] } } }':
+    labels:
+      - source: '"paths": { "@/*": ["./src/*"] }'
+        style: primary
+        start: 23
+        end: 54
+      - source: '"paths"'
+        style: secondary
+        start: 23
+        end: 30

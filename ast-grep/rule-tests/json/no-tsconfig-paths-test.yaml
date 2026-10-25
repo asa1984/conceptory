@@ -1,0 +1,11 @@
+id: json/no-tsconfig-paths
+valid:
+  - '{ "compilerOptions": { "strict": true } }'
+  - '{ "include": ["src/paths.ts"] }'
+invalid:
+  - '{ "compilerOptions": { "paths": { "@/*": ["./src/*"] } } }'
+  - |
+    {
+      // Comments are allowed in tsconfig.
+      "compilerOptions": { "paths": {} }
+    }

@@ -4,7 +4,6 @@
   "compilerOptions": {
     "module": "preserve",
     "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "react-jsx",
-    "noEmit": true
+    "jsx": "react-jsx"
   }
 }

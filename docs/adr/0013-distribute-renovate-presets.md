@@ -59,7 +59,7 @@ Renovate はリポジトリにある設定ファイルを共有プリセット�
 - 0.x 以外の依存の minor と patch の更新は、1つの PR にまとめて CI が通れば自動でマージする。0.x の依存は minor でも破壊的な変更を含みうるので、個別の PR で確認する。メジャーアップデートは自動ではマージせず、PR を作る。
 - crate も、npm と同じく公開から3日待ってから更新する。
 - Nix のマネージャーはベータの段階にある。それでも flake.lock を更新できるよう有効にする。
-- 上げてよいバージョンがほかの依存で決まる依存は、Renovate で更新しない。Vite+ は vite の別名と vitest を同梱したバージョンに固定するよう求めるので、これらは `vp migrate` で上げる。実験的な段階にある React Compiler の Rust の実装は、`@vitejs/plugin-react` が要求するバージョンに合わせて一緒に上げる。
+- 上げてよいバージョンがほかの依存で決まる依存は、Renovate で更新しない。Vite+ は vite のエイリアスと vitest を同梱したバージョンに固定するよう求めるので、これらは `vp migrate` で上げる。実験的な段階にある React Compiler の Rust の実装は、`@vitejs/plugin-react` が要求するバージョンに合わせて一緒に上げる。
 - MSRV は互換性の約束なので、ツールチェーンに合わせて自動では上げない。
 
 Dependabot はバージョンの更新には使わず、脆弱性のアラートだけを有効にする。Renovate は GitHub の脆弱性のアラートを受けて、修正の PR を作る。Dependabot は 2026 年に Nix flake のバージョンの更新に対応したが[^dependabot-nix]、設定を共有できない点は変わらない。
