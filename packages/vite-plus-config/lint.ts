@@ -53,6 +53,9 @@ const categoryExceptions = {
   // It judges by method name alone, so it also flags non-DOM APIs such as Cytoscape.js's
   // getElementById, and its autofix breaks them.
   "unicorn/prefer-query-selector": "off",
+  // Line counts measure formatting and markup rather than complexity, and splitting code to meet
+  // them scatters it. Limits on nesting keep complexity in check instead.
+  "eslint/max-lines-per-function": "off",
 } as const;
 
 export const lint = {
