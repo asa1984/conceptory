@@ -18,5 +18,5 @@
     "textlint-rule-prh": "catalog:",
     "vite-plus": "catalog:"
   },
-  "packageManager": "pnpm@12.10.1"
+  "packageManager": "pnpm@12.16.0"
 }
