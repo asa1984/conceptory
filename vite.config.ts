@@ -29,6 +29,7 @@ export default defineConfig({
     "*.rs": "rustfmt",
     "*.toml": "taplo fmt",
     "*.nix": "nixfmt",
+    "*.go": "gofmt -w",
   },
   run: {
     tasks: {
@@ -41,6 +42,7 @@ export default defineConfig({
           "check:catalog",
           "check:skills",
           "check:files",
+          "check:go",
           "check:renovate",
           "check:rust",
           "check:toml",
@@ -71,6 +73,14 @@ export default defineConfig({
       // Checks that YAML files use the .yaml extension (ADR 0007 "Use the .yaml extension").
       "check:files": {
         command: "cargo run --quiet --package conceptory -- files check",
+        cache: false,
+      },
+      "check:go": {
+        command: [
+          'test -z "$(gofmt -l tools/ghshim)"',
+          "go -C tools/ghshim vet ./...",
+          "go -C tools/ghshim test ./...",
+        ],
         cache: false,
       },
       // Checks the distributed Renovate presets and conceptory's own Renovate config.
