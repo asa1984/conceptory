@@ -25,9 +25,11 @@ profile=/nix/var/nix/profiles/default
 prefetch_lock() {
   [ -f "$1/flake.lock" ] || return 0
   jq -r '.nodes[] | .locked // empty | select(.type == "github")
-    | "git+https://github.com/\(.owner)/\(.repo)?rev=\(.rev)&shallow=1"' "$1/flake.lock" |
-    sort -u | while read -r input; do
-      nix flake prefetch --quiet "$input" >/dev/null
+    | [.owner, .repo, .rev, .narHash] | @tsv' "$1/flake.lock" | sort -u |
+    while IFS=$'\t' read -r owner repo rev nar_hash; do
+      hash=$(nix hash convert --hash-algo sha256 --to nix32 "$nar_hash")
+      [ -e "$(nix-store --print-fixed-path --recursive sha256 "$hash" source)" ] && continue
+      nix flake prefetch --quiet "git+https://github.com/$owner/$repo?rev=$rev&shallow=1" >/dev/null
     done
 }
 
@@ -39,8 +41,7 @@ mkdir -p /var/lib/ghshim
 nix build --out-link /var/lib/ghshim/package "$ghshim_flake#ghshim"
 /var/lib/ghshim/package/bin/ghshim init
 
-# Nix commands dispatch on their name, so each one gets a wrapper that keeps it. A higher
-# priority lets the wrappers shadow the commands of the nix package in the default profile.
+# Nix commands dispatch on their name, so each one gets a wrapper that keeps it.
 nix_bin=$(nix profile list --profile "$profile" --json | jq -r '.elements.nix.storePaths[0]')/bin
 wrappers=$(mktemp -d)
 mkdir "$wrappers/bin"
@@ -50,18 +51,30 @@ for command in "$nix_bin"/*; do
     >"$wrappers/bin/$name"
   chmod +x "$wrappers/bin/$name"
 done
-nix profile remove --profile "$profile" ghshim-nix 2>/dev/null || true
-nix profile add --profile "$profile" --priority 4 "$(nix store add --name ghshim-nix "$wrappers")"
+wrapper=$(nix store add --name ghshim-nix "$wrappers")
 rm -rf "$wrappers"
+# A higher priority lets the wrappers shadow the commands of the nix package in the profile.
+nix profile remove --profile "$profile" ghshim-nix 2>/dev/null || true
+nix profile add --profile "$profile" --priority 4 "$wrapper"
+# The image also installs Nix into root's nix-env profile, which a devShell's PATH lists before
+# the default profile. nix-env takes a priority only for installed packages, so lower the nix
+# package's instead.
+if [ -x ~/.nix-profile/bin/nix ] && [ -f ~/.nix-profile/manifest.nix ]; then
+  nix-env --uninstall ghshim-nix 2>/dev/null || true
+  nix-env --set-flag priority 6 nix
+  nix-env --install "$wrapper"
+fi
 
 # Point the `nixpkgs` registry entry at the nixpkgs the clone locks, so that `nix run nixpkgs#...`
 # reuses its source instead of fetching another revision.
 for lock in */flake.lock; do
   [ -f "$lock" ] || continue
-  rev=$(jq -r '.nodes as $n | $n.root.inputs.nixpkgs | select(type == "string") | $n[.].locked
-    | select(.type == "github" and .owner == "NixOS" and .repo == "nixpkgs") | .rev' "$lock")
-  if [ -n "$rev" ]; then
-    nix registry add nixpkgs "github:NixOS/nixpkgs/$rev"
+  # With the NAR hash, Nix uses the source the clone already fetched.
+  ref=$(jq -r '.nodes as $n | $n.root.inputs.nixpkgs | select(type == "string") | $n[.].locked
+    | select(.type == "github" and .owner == "NixOS" and .repo == "nixpkgs")
+    | "github:NixOS/nixpkgs/\(.rev)?narHash=\(.narHash | @uri)"' "$lock")
+  if [ -n "$ref" ]; then
+    nix registry add nixpkgs "$ref"
     break
   fi
 done
