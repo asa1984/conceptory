@@ -1,0 +1,42 @@
+id: json/tsconfig-extends-base
+snapshots:
+  '{ "compilerOptions": { "strict": true } }':
+    labels:
+      - source: '{ "compilerOptions": { "strict": true } }'
+        style: primary
+        start: 0
+        end: 41
+      - source: '{ "compilerOptions": { "strict": true } }'
+        style: secondary
+        start: 0
+        end: 41
+  '{ "extends": "./tsconfig.base.json" }':
+    labels:
+      - source: '{ "extends": "./tsconfig.base.json" }'
+        style: primary
+        start: 0
+        end: 37
+      - source: '{ "extends": "./tsconfig.base.json" }'
+        style: secondary
+        start: 0
+        end: 37
+  '{ "extends": ["@conceptory/tsconfig/bundler.json", "@conceptory/tsconfig/base.json"] }':
+    labels:
+      - source: '{ "extends": ["@conceptory/tsconfig/bundler.json", "@conceptory/tsconfig/base.json"] }'
+        style: primary
+        start: 0
+        end: 86
+      - source: '{ "extends": ["@conceptory/tsconfig/bundler.json", "@conceptory/tsconfig/base.json"] }'
+        style: secondary
+        start: 0
+        end: 86
+  '{ "files": ["src/main.ts"], "references": [{ "path": "./tsconfig.app.json" }] }':
+    labels:
+      - source: '{ "files": ["src/main.ts"], "references": [{ "path": "./tsconfig.app.json" }] }'
+        style: primary
+        start: 0
+        end: 79
+      - source: '{ "files": ["src/main.ts"], "references": [{ "path": "./tsconfig.app.json" }] }'
+        style: secondary
+        start: 0
+        end: 79

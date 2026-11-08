@@ -18,3 +18,4 @@
 - [import alias は package.json の imports で定める](0015-use-package-imports-for-import-aliases.md) - パッケージの中のモジュールをエイリアスで import するときは、エイリアスを package.json の imports に "#/*" として定め、tsconfig の paths は使わない。
 - [GitHub Actions のワークフローの name をファイル名とそろえ、ジョブとステップには name を書かない](0016-name-github-actions-workflows-after-files.md) - ワークフローの name は拡張子を除いたファイル名と同じにする。ジョブとステップには name を書かず、ワークフローの入力、出力、シークレットには description を書かない。
 - [マージを止めるジョブを pre-merge-check ジョブの needs に集め、それだけを必須の status check にする](0017-gate-merges-on-pre-merge-check.md) - PR のマージを止めるジョブは pre-merge-check.yaml の pre-merge-check ジョブの needs に並べ、ruleset の必須の status check には pre-merge-check だけを登録する。
+- [TypeScript のベースラインを定め直し、tsconfig を base と mixin の組み合わせにする](0018-redefine-typescript-baseline.md) - ADR 0009 を置き換える。どの tsconfig も移植性の高い base.json を先頭に継承し、実行環境や役割の差を mixin として extends の配列で加える。oxlint、oxfmt、ast-grep の規約は ADR 0009 から引き継ぐ。

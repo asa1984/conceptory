@@ -1,0 +1,16 @@
+id: json/tsconfig-extends-base
+valid:
+  - '{ "extends": "@conceptory/tsconfig/base.json" }'
+  - '{ "extends": ["@conceptory/tsconfig/base.json", "@conceptory/tsconfig/dom.json"] }'
+  - '{ "files": [], "references": [{ "path": "./tsconfig.app.json" }] }'
+  - |
+    {
+      // Comments are allowed in tsconfig.
+      "extends": ["@conceptory/tsconfig/base.json"],
+      "compilerOptions": { "extends": "./other.json" }
+    }
+invalid:
+  - '{ "compilerOptions": { "strict": true } }'
+  - '{ "extends": "./tsconfig.base.json" }'
+  - '{ "extends": ["@conceptory/tsconfig/bundler.json", "@conceptory/tsconfig/base.json"] }'
+  - '{ "files": ["src/main.ts"], "references": [{ "path": "./tsconfig.app.json" }] }'

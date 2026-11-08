@@ -90,6 +90,8 @@
                 ./viewer/package.json
                 ./viewer/index.html
                 ./viewer/tsconfig.json
+                ./viewer/tsconfig.app.json
+                ./viewer/tsconfig.node.json
                 ./viewer/vite.config.ts
                 ./viewer/src
               ];

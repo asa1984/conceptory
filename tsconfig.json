@@ -1,4 +1,7 @@
 {
-  "extends": "@conceptory/tsconfig/node.json",
-  "include": ["ast-grep/*.ts", "scripts", "packages/*/*.ts", "vite.config.ts"]
+  "extends": "@conceptory/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["ast-grep/*.ts", "scripts", "vite.config.ts"]
 }
