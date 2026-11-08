@@ -1,0 +1,38 @@
+id: json/tsconfig-extends-base
+language: Json
+severity: error
+message: tsconfig の extends の先頭に @conceptory/tsconfig/base.json を書く。
+note: 'ほかのプリセットは base.json を継承しないので、base.json を先頭に書かないと型検査の厳しさに関わる設定が抜ける。references をまとめるだけの "files": [] の tsconfig は対象外とする。'
+files:
+  # A glob's * also matches /, so tsconfig*.json would match the presets in a tsconfig/ directory.
+  - "**/tsconfig.json"
+  - "**/tsconfig.*.json"
+rule:
+  kind: object
+  inside:
+    kind: document
+  not:
+    any:
+      - has:
+          kind: pair
+          all:
+            - has:
+                field: key
+                regex: '^"extends"$'
+            - has:
+                field: value
+                any:
+                  - regex: '^"@conceptory/tsconfig/base\.json"$'
+                  - kind: array
+                    has:
+                      nthChild: 1
+                      regex: '^"@conceptory/tsconfig/base\.json"$'
+      - has:
+          kind: pair
+          all:
+            - has:
+                field: key
+                regex: '^"files"$'
+            - has:
+                field: value
+                regex: '^\[\s*\]$'

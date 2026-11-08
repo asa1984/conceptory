@@ -2,6 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "esnext",
+    "module": "nodenext",
+    "lib": ["esnext"],
     "moduleDetection": "force",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
@@ -17,6 +19,7 @@
     "noUnusedParameters": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "skipLibCheck": true,
     "noEmit": true
   }
 }

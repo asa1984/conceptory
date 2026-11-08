@@ -15,6 +15,7 @@ sources:
   - id: oxlint-categories
     resource: https://oxc.rs/docs/guide/usage/linter/rules
     title: Oxlint rules
+deprecated-by: /adr/0018-redefine-typescript-baseline.md
 ---
 
 # TypeScript のベースラインを tsconfig、oxlint、oxfmt、ast-grep で定める

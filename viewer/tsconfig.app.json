@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "@conceptory/tsconfig/base.json",
+    "@conceptory/tsconfig/bundler.json",
+    "@conceptory/tsconfig/dom.json",
+    "@conceptory/tsconfig/react.json"
+  ],
+  "compilerOptions": {
+    "types": ["vite-plus/client"]
+  },
+  "include": ["src"]
+}

@@ -6,8 +6,9 @@
   "type": "module",
   "exports": {
     "./base.json": "./base.json",
-    "./node.json": "./node.json",
     "./bundler.json": "./bundler.json",
+    "./dom.json": "./dom.json",
+    "./react.json": "./react.json",
     "./library.json": "./library.json"
   }
 }
