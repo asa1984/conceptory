@@ -1,6 +1,8 @@
 ruleDirs:
   - rules/typescript
   - rules/json
+  - rules/yaml
 testConfigs:
   - testDir: rule-tests/typescript
   - testDir: rule-tests/json
+  - testDir: rule-tests/yaml

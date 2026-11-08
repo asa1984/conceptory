@@ -1,0 +1,108 @@
+id: yaml/workflow-no-job-step-name
+snapshots:
+  "jobs:\n  build:\n    name: Build\n    runs-on: ubuntu-latest\n":
+    labels:
+      - source: "name: Build"
+        style: primary
+        start: 19
+        end: 30
+      - source: jobs
+        style: secondary
+        start: 0
+        end: 4
+      - source: |
+          jobs:
+            build:
+              name: Build
+              runs-on: ubuntu-latest
+        style: secondary
+        start: 0
+        end: 58
+      - source: |
+          build:
+              name: Build
+              runs-on: ubuntu-latest
+        style: secondary
+        start: 8
+        end: 58
+      - source: |
+          build:
+              name: Build
+              runs-on: ubuntu-latest
+        style: secondary
+        start: 8
+        end: 58
+      - source: |
+          build:
+              name: Build
+              runs-on: ubuntu-latest
+        style: secondary
+        start: 8
+        end: 58
+      - source: |
+          name: Build
+              runs-on: ubuntu-latest
+        style: secondary
+        start: 19
+        end: 58
+      - source: |
+          name: Build
+              runs-on: ubuntu-latest
+        style: secondary
+        start: 19
+        end: 58
+      - source: name
+        style: secondary
+        start: 19
+        end: 23
+  "jobs:\n  build:\n    steps:\n      - name: Build\n        run: make\n":
+    labels:
+      - source: "name: Build"
+        style: primary
+        start: 34
+        end: 45
+      - source: steps
+        style: secondary
+        start: 19
+        end: 24
+      - source: |
+          steps:
+                - name: Build
+                  run: make
+        style: secondary
+        start: 19
+        end: 64
+      - source: |
+          - name: Build
+                  run: make
+        style: secondary
+        start: 32
+        end: 64
+      - source: |
+          - name: Build
+                  run: make
+        style: secondary
+        start: 32
+        end: 64
+      - source: |
+          - name: Build
+                  run: make
+        style: secondary
+        start: 32
+        end: 64
+      - source: |
+          name: Build
+                  run: make
+        style: secondary
+        start: 34
+        end: 64
+      - source: |
+          name: Build
+                  run: make
+        style: secondary
+        start: 34
+        end: 64
+      - source: name
+        style: secondary
+        start: 34
+        end: 38

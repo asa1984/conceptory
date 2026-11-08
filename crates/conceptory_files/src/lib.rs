@@ -1,10 +1,14 @@
 //! Checks repository file naming conventions.
 
-use std::{fmt, path::Path};
+use std::{
+    fmt, fs, io,
+    path::{Path, PathBuf},
+};
 
 pub use conceptory_diagnostic::Diagnostic;
-use globset::{Glob, GlobSet, GlobSetBuilder};
+use globset::{Glob, GlobBuilder, GlobSet, GlobSetBuilder};
 use ignore::WalkBuilder;
+use serde::Deserialize;
 
 /// Files excluded from the check by default.
 ///
@@ -23,6 +27,8 @@ pub enum Error {
     Walk(ignore::Error),
     /// An exclude pattern could not be parsed.
     Glob(globset::Error),
+    /// A workflow file could not be read.
+    Read { path: PathBuf, source: io::Error },
 }
 
 impl fmt::Display for Error {
@@ -30,6 +36,7 @@ impl fmt::Display for Error {
         match self {
             Self::Walk(error) => write!(f, "ファイルを走査できません: {error}"),
             Self::Glob(error) => write!(f, "除外するパターンを解釈できません: {error}"),
+            Self::Read { path, source } => write!(f, "{}: {source}", path.display()),
         }
     }
 }
@@ -39,21 +46,28 @@ impl std::error::Error for Error {
         match self {
             Self::Walk(error) => Some(error),
             Self::Glob(error) => Some(error),
+            Self::Read { source, .. } => Some(source),
         }
     }
 }
 
 /// Checks the names of the files under `root`.
 ///
-/// Skips files ignored by `.gitignore` and files matching a pattern in [`DEFAULT_EXCLUDES`] or
-/// `excludes`. Patterns are matched against paths relative to `root`.
+/// Reports YAML files with the `.yml` extension, and GitHub Actions workflows whose `name` differs
+/// from their file name. Skips files ignored by `.gitignore` and files matching a pattern in
+/// [`DEFAULT_EXCLUDES`] or `excludes`. Patterns are matched against paths relative to `root`.
 ///
 /// # Errors
 ///
-/// Returns [`Error::Walk`] if the directory cannot be walked, or [`Error::Glob`] if a pattern
-/// cannot be parsed.
+/// Returns [`Error::Walk`] if the directory cannot be walked, [`Error::Glob`] if a pattern cannot
+/// be parsed, or [`Error::Read`] if a workflow cannot be read.
 pub fn check(root: &Path, excludes: &[String]) -> Result<Vec<Diagnostic>, Error> {
     let excludes = build_excludes(excludes)?;
+    let workflows = GlobBuilder::new(".github/workflows/*.{yaml,yml}")
+        .literal_separator(true)
+        .build()
+        .map_err(Error::Glob)?
+        .compile_matcher();
     let walker = WalkBuilder::new(root)
         .hidden(false)
         .require_git(false)
@@ -71,11 +85,11 @@ pub fn check(root: &Path, excludes: &[String]) -> Result<Vec<Diagnostic>, Error>
         if excludes.is_match(rel) {
             continue;
         }
+        let display = if root == Path::new(".") { rel } else { path };
         if path
             .extension()
             .is_some_and(|extension| extension.eq_ignore_ascii_case("yml"))
         {
-            let display = if root == Path::new(".") { rel } else { path };
             diagnostics.push(Diagnostic::new(
                 display.display().to_string(),
                 1,
@@ -83,9 +97,59 @@ pub fn check(root: &Path, excludes: &[String]) -> Result<Vec<Diagnostic>, Error>
                 "YAML ファイルの拡張子は `.yaml` にしてください",
             ));
         }
+        if workflows.is_match(rel) {
+            diagnostics.extend(check_workflow_name(path, display)?);
+        }
     }
     diagnostics.sort();
     Ok(diagnostics)
+}
+
+/// The fields of a GitHub Actions workflow that the check reads.
+#[derive(Deserialize)]
+struct Workflow {
+    name: Option<String>,
+}
+
+/// Checks that the workflow at `path` has a `name` equal to its file stem.
+///
+/// The UI shows a workflow without `name` by its path, and a `name` that differs from the file
+/// name makes the file hard to find from the UI. A workflow that is not valid YAML is left to
+/// actionlint.
+///
+/// # Errors
+///
+/// Returns [`Error::Read`] if the file cannot be read.
+fn check_workflow_name(path: &Path, display: &Path) -> Result<Option<Diagnostic>, Error> {
+    let content = fs::read_to_string(path).map_err(|source| Error::Read {
+        path: path.to_path_buf(),
+        source,
+    })?;
+    let Ok(workflow) = serde_saphyr::from_str::<Workflow>(&content) else {
+        return Ok(None);
+    };
+    let stem = path
+        .file_stem()
+        .map(|stem| stem.to_string_lossy())
+        .unwrap_or_default();
+    let message = match workflow.name {
+        Some(name) if name == stem => return Ok(None),
+        Some(name) => {
+            format!("ワークフローの `name` の `{name}` をファイル名と同じ `{stem}` にしてください")
+        },
+        None => format!("ワークフローに、ファイル名と同じ `name: {stem}` を書いてください"),
+    };
+    // serde-saphyr does not report positions, so point at the top-level `name` key if any.
+    let line = content
+        .lines()
+        .position(|line| line.starts_with("name:"))
+        .map_or(1, |index| index + 1);
+    Ok(Some(Diagnostic::new(
+        display.display().to_string(),
+        line,
+        "workflow-name",
+        message,
+    )))
 }
 
 /// Combines the patterns in [`DEFAULT_EXCLUDES`] and `excludes`.

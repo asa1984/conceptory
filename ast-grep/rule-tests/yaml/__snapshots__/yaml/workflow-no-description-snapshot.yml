@@ -1,0 +1,49 @@
+id: yaml/workflow-no-description
+snapshots:
+  "on:\n  workflow_call:\n    secrets:\n      token:\n        description: A token to publish with\n":
+    labels:
+      - source: "description: A token to publish with"
+        style: primary
+        start: 55
+        end: 91
+      - source: "on"
+        style: secondary
+        start: 0
+        end: 2
+      - source: |
+          on:
+            workflow_call:
+              secrets:
+                token:
+                  description: A token to publish with
+        style: secondary
+        start: 0
+        end: 92
+      - source: description
+        style: secondary
+        start: 55
+        end: 66
+  "on:\n  workflow_dispatch:\n    inputs:\n      level:\n        description: Log level\n        type: string\n":
+    labels:
+      - source: "description: Log level"
+        style: primary
+        start: 58
+        end: 80
+      - source: "on"
+        style: secondary
+        start: 0
+        end: 2
+      - source: |
+          on:
+            workflow_dispatch:
+              inputs:
+                level:
+                  description: Log level
+                  type: string
+        style: secondary
+        start: 0
+        end: 102
+      - source: description
+        style: secondary
+        start: 58
+        end: 69

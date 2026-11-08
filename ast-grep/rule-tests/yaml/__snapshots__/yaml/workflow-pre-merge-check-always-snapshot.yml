@@ -1,0 +1,76 @@
+id: yaml/workflow-pre-merge-check-always
+snapshots:
+  "jobs:\n  pre-merge-check:\n    if: success()\n    needs: [build]\n":
+    labels:
+      - source: |
+          pre-merge-check:
+              if: success()
+              needs: [build]
+        style: primary
+        start: 8
+        end: 62
+      - source: jobs
+        style: secondary
+        start: 0
+        end: 4
+      - source: |
+          jobs:
+            pre-merge-check:
+              if: success()
+              needs: [build]
+        style: secondary
+        start: 0
+        end: 62
+      - source: |
+          pre-merge-check:
+              if: success()
+              needs: [build]
+        style: secondary
+        start: 8
+        end: 62
+      - source: |
+          pre-merge-check:
+              if: success()
+              needs: [build]
+        style: secondary
+        start: 8
+        end: 62
+      - source: pre-merge-check
+        style: secondary
+        start: 8
+        end: 23
+  "jobs:\n  pre-merge-check:\n    needs: [build]\n":
+    labels:
+      - source: |
+          pre-merge-check:
+              needs: [build]
+        style: primary
+        start: 8
+        end: 44
+      - source: jobs
+        style: secondary
+        start: 0
+        end: 4
+      - source: |
+          jobs:
+            pre-merge-check:
+              needs: [build]
+        style: secondary
+        start: 0
+        end: 44
+      - source: |
+          pre-merge-check:
+              needs: [build]
+        style: secondary
+        start: 8
+        end: 44
+      - source: |
+          pre-merge-check:
+              needs: [build]
+        style: secondary
+        start: 8
+        end: 44
+      - source: pre-merge-check
+        style: secondary
+        start: 8
+        end: 23

@@ -1,0 +1,35 @@
+id: yaml/workflow-pre-merge-check-always
+language: Yaml
+severity: error
+message: pre-merge-check ジョブに if を always() で書き、needs のジョブが失敗したときはステップを失敗させる。
+note: needs のジョブが失敗すると、後のジョブは既定ではスキップされる。スキップされたジョブの status check は成功として扱われるので、必須にしていてもマージを止めない。
+files:
+  - "**/.github/workflows/*.yaml"
+rule:
+  kind: block_mapping_pair
+  has:
+    field: key
+    regex: ^pre-merge-check$
+  inside:
+    kind: block_mapping
+    inside:
+      kind: block_node
+      inside:
+        kind: block_mapping_pair
+        has:
+          field: key
+          regex: ^jobs$
+  not:
+    has:
+      field: value
+      has:
+        kind: block_mapping
+        has:
+          kind: block_mapping_pair
+          all:
+            - has:
+                field: key
+                regex: ^if$
+            - has:
+                field: value
+                regex: always\(\)

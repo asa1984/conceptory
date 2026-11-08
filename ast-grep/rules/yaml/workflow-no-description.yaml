@@ -1,0 +1,18 @@
+id: yaml/workflow-no-description
+language: Yaml
+severity: error
+message: ワークフローの入力、出力、シークレットに description を書かない。
+note: 入力、出力、シークレットの意味は ID で表す。
+files:
+  - "**/.github/workflows/*.yaml"
+rule:
+  kind: block_mapping_pair
+  has:
+    field: key
+    regex: ^description$
+  inside:
+    stopBy: end
+    kind: block_mapping_pair
+    has:
+      field: key
+      regex: ^on$
