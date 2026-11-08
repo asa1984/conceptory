@@ -30,7 +30,10 @@ enum Command {
 
 #[derive(Subcommand)]
 enum FilesCommand {
-    #[command(about = "YAML ファイルの拡張子が `.yaml` であることを検査する")]
+    #[command(
+        about = "YAML ファイルの拡張子が `.yaml` であることと、GitHub Actions のワークフローの \
+                 `name` がファイル名と同じであることを検査する"
+    )]
     Check {
         #[arg(
             default_value = ".",

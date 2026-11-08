@@ -345,6 +345,8 @@ dependencies = [
  "conceptory_diagnostic",
  "globset",
  "ignore",
+ "serde",
+ "serde-saphyr",
 ]
 
 [[package]]

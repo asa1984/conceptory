@@ -1,3 +1,4 @@
 ruleDirs:
   - ast-grep/rules/typescript
   - ast-grep/rules/json
+  - ast-grep/rules/yaml

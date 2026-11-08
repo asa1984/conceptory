@@ -1,0 +1,31 @@
+id: yaml/workflow-no-job-step-name
+valid:
+  - |
+    name: check
+    on: push
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+        steps:
+          - run: make
+  - |
+    jobs:
+      deploy:
+        environment:
+          name: production
+        steps:
+          - uses: actions/upload-artifact@v7
+            with:
+              name: dist
+invalid:
+  - |
+    jobs:
+      build:
+        name: Build
+        runs-on: ubuntu-latest
+  - |
+    jobs:
+      build:
+        steps:
+          - name: Build
+            run: make

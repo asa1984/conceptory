@@ -1,4 +1,4 @@
-name: check
+name: pre-merge-check
 
 on:
   pull_request:
@@ -56,3 +56,12 @@ jobs:
           COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
       - run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH"
       - run: vp run check
+
+  pre-merge-check:
+    if: always()
+    needs: [flake, vite-plus]
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    steps:
+      - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1

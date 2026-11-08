@@ -16,3 +16,5 @@
 - [依存の更新は Renovate の共有プリセットで配布し、Dependabot は脆弱性のアラートだけに使う](0013-distribute-renovate-presets.md) - Renovate のプリセットを renovate/ に置いて各リポジトリから参照させ、Dependabot はバージョンの更新に使わず脆弱性のアラートだけを有効にする。
 - [GitHub Actions のアクションはコミットの SHA で固定し、ワークフローを actionlint と zizmor で検査する](0014-harden-github-actions.md) - CI は Nix の devShell と flake の検査を GitHub Actions で実行し、アクションの固定と最小の権限を守らせ、ワークフローを静的に検査する。
 - [import alias は package.json の imports で定める](0015-use-package-imports-for-import-aliases.md) - パッケージの中のモジュールをエイリアスで import するときは、エイリアスを package.json の imports に "#/*" として定め、tsconfig の paths は使わない。
+- [GitHub Actions のワークフローの name をファイル名とそろえ、ジョブとステップには name を書かない](0016-name-github-actions-workflows-after-files.md) - ワークフローの name は拡張子を除いたファイル名と同じにする。ジョブとステップには name を書かず、ワークフローの入力、出力、シークレットには description を書かない。
+- [マージを止めるジョブを pre-merge-check ジョブの needs に集め、それだけを必須の status check にする](0017-gate-merges-on-pre-merge-check.md) - PR のマージを止めるジョブは pre-merge-check.yaml の pre-merge-check ジョブの needs に並べ、ruleset の必須の status check には pre-merge-check だけを登録する。

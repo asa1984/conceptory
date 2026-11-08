@@ -24,6 +24,14 @@ fn tree(name: &str, files: &[&str]) -> PathBuf {
     root
 }
 
+/// Writes `content` to `file` under `root`.
+fn write(root: &Path, file: &str, content: &str) {
+    let path = root.join(file);
+    fs::create_dir_all(path.parent().expect("file has a parent directory"))
+        .expect("can create the directory");
+    fs::write(&path, content).expect("can write the file");
+}
+
 fn violations(root: &Path, excludes: &[&str]) -> Vec<String> {
     let excludes: Vec<String> = excludes.iter().map(ToString::to_string).collect();
     conceptory_files::check(root, &excludes)
@@ -72,4 +80,44 @@ fn skips_generated_and_ignored_files() {
 fn rejects_invalid_pattern() {
     let root = tree("invalid", &[]);
     assert!(conceptory_files::check(&root, &["[".to_owned()]).is_err());
+}
+
+#[test]
+fn reports_workflow_names_that_differ_from_file_names() {
+    let root = tree("workflows", &[]);
+    write(
+        &root,
+        ".github/workflows/check.yaml",
+        "name: check\non: push\n",
+    );
+    write(
+        &root,
+        ".github/workflows/quoted.yaml",
+        "name: \"quoted\"\non: push\n",
+    );
+    write(
+        &root,
+        ".github/workflows/renamed.yaml",
+        "on: push\nname: CI\n",
+    );
+    write(&root, ".github/workflows/unnamed.yaml", "on: push\n");
+    write(&root, ".github/workflows/nested/ignored.yaml", "on: push\n");
+    write(&root, ".github/dependabot.yaml", "version: 2\n");
+    write(&root, "config.yaml", "on: push\n");
+    let diagnostics = conceptory_files::check(&root, &[]).expect("check succeeds");
+    let found: Vec<(String, usize)> = diagnostics
+        .iter()
+        .map(|diagnostic| {
+            let path = Path::new(&diagnostic.path)
+                .strip_prefix(&root)
+                .expect("diagnostic path is under root")
+                .display()
+                .to_string();
+            (path, diagnostic.line)
+        })
+        .collect();
+    assert_eq!(found, [
+        (".github/workflows/renamed.yaml".to_owned(), 2),
+        (".github/workflows/unnamed.yaml".to_owned(), 1),
+    ]);
 }

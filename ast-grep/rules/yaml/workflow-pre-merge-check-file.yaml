@@ -1,0 +1,23 @@
+id: yaml/workflow-pre-merge-check-file
+language: Yaml
+severity: error
+message: pre-merge-check ジョブは .github/workflows/pre-merge-check.yaml に置く。
+note: needs に書けるのは同じワークフローのジョブだけなので、マージを止めるジョブは pre-merge-check と同じワークフローに置く。
+files:
+  - "**/.github/workflows/*.yaml"
+ignores:
+  - "**/.github/workflows/pre-merge-check.yaml"
+rule:
+  kind: block_mapping_pair
+  has:
+    field: key
+    regex: ^pre-merge-check$
+  inside:
+    kind: block_mapping
+    inside:
+      kind: block_node
+      inside:
+        kind: block_mapping_pair
+        has:
+          field: key
+          regex: ^jobs$

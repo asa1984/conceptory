@@ -1,0 +1,41 @@
+id: yaml/workflow-no-job-step-name
+language: Yaml
+severity: error
+message: ジョブとステップに name を書かない。
+note: name がなければ、GitHub はジョブを ID で、ステップを実行する内容で表示する。ジョブの ID は、そのまま status check の名前になる。
+files:
+  - "**/.github/workflows/*.yaml"
+rule:
+  kind: block_mapping_pair
+  has:
+    field: key
+    regex: ^name$
+  inside:
+    kind: block_mapping
+    inside:
+      kind: block_node
+      any:
+        # A job under jobs.
+        - inside:
+            kind: block_mapping_pair
+            inside:
+              kind: block_mapping
+              inside:
+                kind: block_node
+                inside:
+                  kind: block_mapping_pair
+                  has:
+                    field: key
+                    regex: ^jobs$
+        # A step under steps.
+        - inside:
+            kind: block_sequence_item
+            inside:
+              kind: block_sequence
+              inside:
+                kind: block_node
+                inside:
+                  kind: block_mapping_pair
+                  has:
+                    field: key
+                    regex: ^steps$

@@ -26,6 +26,7 @@ export default defineConfig({
   staged: {
     "*": "vp check --fix --no-error-on-unmatched-pattern",
     "*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}": "ast-grep scan",
+    ".github/workflows/*.yaml": "ast-grep scan",
     "*.rs": "rustfmt",
     "*.toml": "taplo fmt",
     "*.nix": "nixfmt",
@@ -54,9 +55,10 @@ export default defineConfig({
         command: ["actionlint", "zizmor --offline .github/workflows"],
         cache: false,
       },
-      // Checks TypeScript rules that oxlint cannot express, and tests the rules themselves.
+      // Checks rules that oxlint and actionlint cannot express, and tests the rules themselves.
       "check:ast-grep": {
-        command: ["ast-grep scan", "ast-grep test --config ast-grep/sgconfig.yaml"],
+        // ast-grep skips hidden directories unless they are given explicitly.
+        command: ["ast-grep scan . .github", "ast-grep test --config ast-grep/sgconfig.yaml"],
         cache: false,
       },
       "check:catalog": {
@@ -68,7 +70,8 @@ export default defineConfig({
         command: 'test -z "$(find -L skills -type l)"',
         cache: false,
       },
-      // Checks that YAML files use the .yaml extension (ADR 0007 "Use the .yaml extension").
+      // Checks that YAML files use the .yaml extension (ADR 0007 "Use the .yaml extension") and that
+      // workflows are named after their files (ADR 0016 "Name GitHub Actions workflows after their files").
       "check:files": {
         command: "cargo run --quiet --package conceptory -- files check",
         cache: false,

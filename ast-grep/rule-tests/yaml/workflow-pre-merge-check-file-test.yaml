@@ -1,0 +1,12 @@
+id: yaml/workflow-pre-merge-check-file
+valid:
+  - |
+    jobs:
+      build:
+        needs: [pre-merge-check]
+invalid:
+  - |
+    jobs:
+      pre-merge-check:
+        if: always()
+        needs: [build]

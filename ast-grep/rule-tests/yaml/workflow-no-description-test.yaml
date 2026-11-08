@@ -1,0 +1,29 @@
+id: yaml/workflow-no-description
+valid:
+  - |
+    on:
+      workflow_dispatch:
+        inputs:
+          level:
+            type: string
+  - |
+    jobs:
+      build:
+        steps:
+          - uses: example/release@v1
+            with:
+              description: Release notes
+invalid:
+  - |
+    on:
+      workflow_dispatch:
+        inputs:
+          level:
+            description: Log level
+            type: string
+  - |
+    on:
+      workflow_call:
+        secrets:
+          token:
+            description: A token to publish with

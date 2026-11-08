@@ -1,0 +1,26 @@
+id: yaml/workflow-pre-merge-check-always
+valid:
+  - |
+    jobs:
+      pre-merge-check:
+        if: always()
+        needs: [build]
+  - |
+    jobs:
+      pre-merge-check:
+        if: ${{ always() }}
+        needs: [build]
+  - |
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+invalid:
+  - |
+    jobs:
+      pre-merge-check:
+        needs: [build]
+  - |
+    jobs:
+      pre-merge-check:
+        if: success()
+        needs: [build]
