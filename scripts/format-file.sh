@@ -7,6 +7,7 @@ for file in "$@"; do
     *.rs) rustfmt "$file" ;;
     *.nix) nixfmt "$file" ;;
     *.toml) taplo fmt "$file" ;;
+    *.go) gofmt -w "$file" ;;
     *) vp fmt --no-error-on-unmatched-pattern "$file" ;;
   esac
 done

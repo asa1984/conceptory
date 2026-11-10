@@ -30,6 +30,7 @@ export default defineConfig({
     "*.rs": "rustfmt",
     "*.toml": "taplo fmt",
     "*.nix": "nixfmt",
+    "*.go": "gofmt -w",
   },
   run: {
     tasks: {
@@ -42,6 +43,7 @@ export default defineConfig({
           "check:catalog",
           "check:skills",
           "check:files",
+          "check:go",
           "check:renovate",
           "check:rust",
           "check:toml",
@@ -74,6 +76,14 @@ export default defineConfig({
       // workflows are named after their files (ADR 0016 "Name GitHub Actions workflows after their files").
       "check:files": {
         command: "cargo run --quiet --package conceptory -- files check",
+        cache: false,
+      },
+      "check:go": {
+        command: [
+          'test -z "$(gofmt -l tools/ghshim)"',
+          "go -C tools/ghshim vet ./...",
+          "go -C tools/ghshim test ./...",
+        ],
         cache: false,
       },
       // Checks the distributed Renovate presets and conceptory's own Renovate config.

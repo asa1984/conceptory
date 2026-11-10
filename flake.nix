@@ -66,6 +66,7 @@
             pkgs.renovate
             pkgs.nixfmt
             pkgs.jq
+            pkgs.go
           ];
         in
         {
@@ -140,6 +141,22 @@
             }
           );
 
+          # Lets Nix fetch `github:` inputs in Claude Code on the web sessions. scripts/cloud-setup.sh
+          # builds it from this flake.
+          packages.ghshim = pkgs.buildGoModule {
+            pname = "ghshim";
+            version = "0.1.0";
+            src = lib.fileset.toSource {
+              root = ./tools/ghshim;
+              fileset = ./tools/ghshim;
+            };
+            vendorHash = null;
+            ldflags = [ "-X main.gitPath=${lib.getExe pkgs.git}" ];
+            # The tests run git against a local repository.
+            nativeCheckInputs = [ pkgs.git ];
+            meta.mainProgram = "ghshim";
+          };
+
           # ast-grep rules distributed to downstream repositories, with one directory per language. Each
           # repository links to this package from its devShell and points sgconfig.yaml at the directories
           # for the languages it uses.
@@ -153,7 +170,7 @@
           '';
 
           checks = {
-            inherit (config.packages) conceptory;
+            inherit (config.packages) conceptory ghshim;
             renovate =
               pkgs.runCommand "conceptory-renovate-config"
                 {
