@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && direnv export bash >> \"$CLAUDE_ENV_FILE\" 2>/dev/null || true",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && direnv export bash > \"$CLAUDE_ENV_FILE\" 2>/dev/null || true",
             "timeout": 300,
             "statusMessage": "Loading direnv"
           }
@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && direnv export bash >> \"$CLAUDE_ENV_FILE\" 2>/dev/null || true",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && direnv export bash > \"$CLAUDE_ENV_FILE\" 2>/dev/null || true",
             "timeout": 300,
             "statusMessage": "Reloading direnv"
           }
