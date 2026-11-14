@@ -22,7 +22,7 @@ conceptory_diagnostic = { path = "crates/conceptory_diagnostic" }
 conceptory_files = { path = "crates/conceptory_files" }
 conceptory_okf = { path = "crates/conceptory_okf" }
 conceptory_server = { path = "crates/conceptory_server" }
-globset = "=0.4.20"
+globset = "=0.4.21"
 http-body-util = "=0.1.5"
 ignore = "=0.4.33"
 jsonschema = { version = "=0.58.6", default-features = false }
