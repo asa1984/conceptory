@@ -9,13 +9,17 @@ tags:
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-10T02:35:59+09:00
+sources:
+  - id: yoshida-nakayama-2002
+    resource: https://www.jstage.jst.go.jp/article/jmet/25/4/25_25.4_217/_article/-char/ja
+    title: 吉田直人・中山実「わかりやすい文章表現と文章理解に関する一検討」日本教育工学雑誌 25(4), 2002
 ---
 
 # 日本語の文章を静的検査と LLM の見直しの二段階で検査する
 
 ## Context and Problem Statement
 
-[日本語の技術文書の書き方](../../guides/japanese-writing.md) が定める規約には、機械的に検査できるものとできないものがある。避ける語や文の長さは辞書と形態素解析で検査できる。一方で修飾の順序や直訳調かどうか、文のつながりは文脈を読まなければ判定できず、静的検査で扱うと誤検出が多くなる。品質の問題を見つけたときに、どのように検査して再発を防ぐべきか。
+[日本語の技術文書の書き方](../../guides/japanese-writing.md) が定める規約には、機械的に検査できるものとできないものがある。避ける語や助詞の重複は辞書と形態素解析で検査できる。一方で修飾の順序や直訳調かどうか、文のつながりは文脈を読まなければ判定できず、静的検査で扱うと誤検出が多くなる。品質の問題を見つけたときに、どのように検査して再発を防ぐべきか。
 
 ## Decision Drivers
 
@@ -39,12 +43,12 @@ generated:
 
 | ルール集                                     | 検出するもの                                                   |
 | -------------------------------------------- | -------------------------------------------------------------- |
-| textlint-rule-preset-ja-technical-writing    | 文の長さ、読点の数、助詞の重複、冗長な表現など                 |
+| textlint-rule-preset-ja-technical-writing    | 読点の数、助詞の重複、冗長な表現など                           |
 | @textlint-ja/textlint-rule-preset-ai-writing | 機械的な箇条書きや強調などの書式                               |
 | textlint-rule-preset-ai-words-ja             | 避ける語。スタイルガイドの `vocabulary` から生成した辞書も使う |
 | textlint-rule-prh                            | 用語の表記ゆれ。文書の `terms` から生成した辞書を使う          |
 
-辞書と一致する語を検出する ai-words-ja のルールは、正しい用法も指摘することがあるので warning とし、ほかのルールは error とする。生成された `index.md` は frontmatter の内容を並べたものなので、textlint の対象から外す。
+辞書と一致する語を検出する ai-words-ja のルールは、正しい用法も指摘することがあるので warning とし、ほかのルールは error とする。ただし textlint-rule-preset-ja-technical-writing のうち文の長さを検査する sentence-length は無効にする。文字数の上限を守ろうとして文を分けると、1つの事柄を述べる文が接続詞でつないだ短い文の連なりに変わる。またインラインコードや ADR のタイトルも字数に数えるので、技術文書の文は内容によらず上限を超えやすい。文が読みにくいかどうかは文脈に依存するので、文の長さはスタイルガイドに従って見直しで扱う。生成された `index.md` は frontmatter の内容を並べたものなので、textlint の対象から外す。
 
 正しい用法なのに指摘された場合は、その箇所を `textlint-disable` のコメントで囲み、理由をコメントに書く。conceptory の文書全体で正当に使う語は `.textlintrc.yaml` の `allows` に入れる。
 
@@ -92,3 +96,7 @@ conceptory の CI で conceptory CLI と textlint を実行し、error があれ
 ## More Information
 
 文書の構造を数える検査（段落ごとの太字の数や箇条書きの比率）は、閾値を既存の文書で決めてから conceptory CLI に追加する。係り受け解析で修飾の順序を検査する方法（GiNZA など）は誤検出が多いと見込まれるので、当面は採用しない。
+
+sentence-length は当初 error として使っていたが、運用の中で無効にした。説明文を使った実験で、50字を超える文は50字以下の文より設問への解答時間が長かったという報告はある[^yoshida-nakayama-2002]。しかし文字数の上限に合わせて文を分けると読みやすくなることを示す研究は見つけていない。
+
+[^yoshida-nakayama-2002]: 吉田と中山は説明文の一文の字数を変えて読み手に設問を解かせ、50字を超える文で解答時間が有意に長くなったと報告し、一文を50字程度にすることを提案している。

@@ -3,6 +3,9 @@ filters:
   comments: true
 rules:
   preset-ja-technical-writing:
+    # Splitting sentences to fit a character count fragments the prose, and inline code and ADR
+    # titles inflate the count, so sentence length is left to review.
+    sentence-length: false
     # Documents use the plain (dearu) style (guides/japanese-writing.md).
     no-mix-dearu-desumasu:
       preferInHeader: ""
