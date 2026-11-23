@@ -12,4 +12,13 @@ in
 {
   inherit (build) conceptory;
   conceptory-ast-grep-rules = build.ast-grep-rules;
+  # Links the ast-grep rules to the path sgconfig.yaml refers to (ADR 0011 "Distribute ast-grep
+  # rules by language via the Nix flake"). CI runs it after installing packages.ci.
+  conceptory-link-ast-grep-rules = final.writeShellApplication {
+    name = "conceptory-link-ast-grep-rules";
+    text = ''
+      mkdir -p .conceptory
+      ln -sfn ${final.conceptory-ast-grep-rules} .conceptory/ast-grep
+    '';
+  };
 }

@@ -15,18 +15,9 @@
     }:
     let
       cfg = config.conceptory;
-      # Links the ast-grep rules to the path sgconfig.yaml refers to (ADR 0011 "Distribute ast-grep
-      # rules by language via the Nix flake"). CI runs it after installing packages.ci.
-      linkAstGrepRules = pkgs.writeShellApplication {
-        name = "conceptory-link-ast-grep-rules";
-        text = ''
-          mkdir -p .conceptory
-          ln -sfn ${pkgs.conceptory-ast-grep-rules} .conceptory/ast-grep
-        '';
-      };
       ciPackages =
         lib.optionals cfg.cli.enable [ pkgs.conceptory ]
-        ++ lib.optionals cfg.astGrepRules.enable [ linkAstGrepRules ]
+        ++ lib.optionals cfg.astGrepRules.enable [ pkgs.conceptory-link-ast-grep-rules ]
         ++ [
           pkgs.ast-grep
           pkgs.actionlint

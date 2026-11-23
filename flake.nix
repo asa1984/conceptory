@@ -87,6 +87,7 @@
             inherit (pkgs) conceptory;
             inherit (build) viewer;
             ast-grep-rules = pkgs.conceptory-ast-grep-rules;
+            link-ast-grep-rules = pkgs.conceptory-link-ast-grep-rules;
           };
 
           checks = {
