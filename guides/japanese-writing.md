@@ -46,6 +46,12 @@ vocabulary:
     prefer:
       - 直接書いた
     pos: 名詞
+  - avoid: ピア依存
+    prefer:
+      - peerDependencies
+    tokens:
+      - surface: ピア
+      - surface: 依存
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-10T03:15:39+09:00
@@ -87,6 +93,7 @@ sources:
 | 正本     | 信頼できる唯一の情報源（source of truth） |
 | 表題     | タイトル                                  |
 | 診断     | 検査結果（diagnostics）                   |
+| ピア依存 | peerDependencies                          |
 
 ### 語種は読み手と文書の種類で選ぶ
 
