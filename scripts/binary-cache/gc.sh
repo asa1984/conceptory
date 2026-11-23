@@ -14,13 +14,15 @@ set -euo pipefail
 retention_days=30
 cutoff=$(date -u -d "$retention_days days ago" +%Y-%m-%dT%H:%M:%S)
 
-s3api() { aws --endpoint-url "https://$R2_ENDPOINT" s3api "$@"; }
+# R2 accepts only its own region names, and the AWS CLI otherwise picks an AWS region.
+aws_r2() { aws --endpoint-url "https://$R2_ENDPOINT" --region auto "$@"; }
+s3api() { aws_r2 s3api "$@"; }
 # Prints "<key>\t<last modified>" for each object under the prefix.
 list() {
   s3api list-objects-v2 --bucket "$R2_BUCKET" --prefix "$1" \
     --query 'Contents[].[Key, LastModified]' --output text | grep -v '^None$' || true
 }
-get() { aws --endpoint-url "https://$R2_ENDPOINT" s3 cp "s3://$R2_BUCKET/$1" -; }
+get() { aws_r2 s3 cp "s3://$R2_BUCKET/$1" -; }
 delete() {
   local key
   for key in "$@"; do
