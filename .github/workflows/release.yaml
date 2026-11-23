@@ -1,0 +1,61 @@
+# Releases the head of main as vYYYY.M.N and publishes @asa1984/conceptory to npm with trusted
+# publishing (ADR 0022 "Release with calendar versioning and publish the npm package with trusted
+# publishing").
+name: release
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+# Two runs must not pick the same N.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-slim
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - id: version
+        # N counts the releases in the month, so a second release on the same day gets the next N.
+        run: |
+          prefix=$(TZ=Asia/Tokyo date +%Y.%-m)
+          last=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 1000 --json tagName --jq '.[].tagName' |
+            sed -n "s/^v${prefix//./\\.}\.\([0-9]*\)$/\1/p" | sort -n | tail -n 1)
+          echo "version=$prefix.$((${last:--1} + 1))" >>"$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+      # Creating the release also creates the tag. It fails if the tag exists, so a version is
+      # never released twice.
+      - run: gh release create "v$VERSION" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+
+  # If publishing fails, rerun this job alone.
+  publish:
+    needs: [tag]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # npm's trusted publisher only accepts this environment, which only allows main.
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-nix
+      # Provides Node.js with npm 11.5.1 or later, which trusted publishing requires.
+      - uses: ./.github/actions/setup-workspace
+      - run: scripts/publish.sh
+        env:
+          VERSION: ${{ needs.tag.outputs.version }}

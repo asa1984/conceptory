@@ -323,7 +323,7 @@ dependencies = [
 
 [[package]]
 name = "conceptory"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "clap",
  "conceptory_files",
@@ -333,14 +333,14 @@ dependencies = [
 
 [[package]]
 name = "conceptory_diagnostic"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "conceptory_files"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "conceptory_diagnostic",
  "globset",
@@ -351,7 +351,7 @@ dependencies = [
 
 [[package]]
 name = "conceptory_okf"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "ammonia",
  "comrak",
@@ -365,7 +365,7 @@ dependencies = [
 
 [[package]]
 name = "conceptory_server"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "axum",
  "conceptory_okf",

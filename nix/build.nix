@@ -1,6 +1,11 @@
 # Builds conceptory from this repository with `pkgs`, which must have rust-overlay applied. The
 # overlay and the flake's checks both call this, so they share the same derivations.
-{ pkgs, crane }:
+{
+  pkgs,
+  crane,
+  # Revision and date of the commit, which the CLI shows with --version.
+  buildInfo ? null,
+}:
 let
   inherit (pkgs) lib;
   root = ../.;
@@ -101,7 +106,10 @@ in
       cargoExtraArgs = "--locked --package conceptory";
       # Tests run in the flake's checks.
       doCheck = false;
-      env.CONCEPTORY_VIEWER_DIST = viewer;
+      env = {
+        CONCEPTORY_VIEWER_DIST = viewer;
+      }
+      // lib.optionalAttrs (buildInfo != null) { CONCEPTORY_BUILD = buildInfo; };
       meta.mainProgram = "conceptory";
     }
   );

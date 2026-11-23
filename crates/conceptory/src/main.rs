@@ -10,8 +10,18 @@ use std::{
 use clap::{Parser, Subcommand};
 use conceptory_okf::{Diagnostic, Schemas};
 
+/// Version shown by `--version`.
+///
+/// Releases do not record their version in `Cargo.toml`, so Nix builds pass the revision and date
+/// of the commit they build instead (ADR 0022 "Release with calendar versioning and publish the npm
+/// package with trusted publishing").
+const VERSION: &str = match option_env!("CONCEPTORY_BUILD") {
+    Some(build) => build,
+    None => env!("CARGO_PKG_VERSION"),
+};
+
 #[derive(Parser)]
-#[command(version, about = "conceptory が配布する規約を扱う")]
+#[command(version = VERSION, about = "conceptory が配布する規約を扱う")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
