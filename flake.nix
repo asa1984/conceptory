@@ -10,13 +10,29 @@
   };
 
   outputs =
-    inputs:
+    inputs@{ self, ... }:
+    let
+      flakeModule = import ./nix/flake-module.nix { conceptory = self; };
+    in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      # conceptory sets up its own pkgs, packages.ci, and devShell with the module it distributes.
+      imports = [ flakeModule ];
+
       systems = [
         "aarch64-darwin"
         "aarch64-linux"
         "x86_64-linux"
       ];
+
+      flake = {
+        # Downstream repositories that need their own nixpkgs apply this instead of using the module
+        # (ADR 0020 "Provide nixpkgs with the overlay and a flake-parts module").
+        overlays.default = inputs.nixpkgs.lib.composeManyExtensions [
+          inputs.rust-overlay.overlays.default
+          (import ./nix/overlay.nix { inherit (inputs) crane; })
+        ];
+        flakeModules.default = flakeModule;
+      };
 
       perSystem =
         {
@@ -27,134 +43,51 @@
           ...
         }:
         let
-          # Use the same toolchain for the devShell and the package builds.
-          rustToolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-          craneLib = (inputs.crane.mkLib pkgs).overrideToolchain (_: rustToolchain);
-          # conceptory_okf embeds the schemas with include_str! and the style guides in guides/ with rust-embed.
-          # The clippy check reads clippy.toml.
-          commonArgs = {
-            src = lib.fileset.toSource {
-              root = ./.;
-              fileset = lib.fileset.unions [
-                ./Cargo.toml
-                ./Cargo.lock
-                ./clippy.toml
-                ./crates
-                ./guides
-                ./schemas
-              ];
-            };
-            pname = "conceptory";
-            version = (lib.importTOML ./Cargo.toml).workspace.package.version;
-            strictDeps = true;
+          build = import ./nix/build.nix {
+            inherit pkgs;
+            inherit (inputs) crane;
           };
-          # Build only the dependencies first and share them between the package and the checks.
-          cargoArtifacts = craneLib.buildDepsOnly commonArgs;
           # rustfmt.toml uses nightly-only options, so take rustfmt alone from a pinned nightly.
           rustfmt = pkgs.rust-bin.nightly."2026-10-09".rustfmt;
-          # Tools used in CI, which packages.ci provides (ADR 0019 "Distribute artifacts via npm, Nix flake,
-          # and the conceptory CLI"). The devShell provides the same tools for development.
-          ciTools = [
-            pkgs.nodejs_26
-            # corepack runs pnpm on its own Node.js, so build it with Node.js 26 instead of the default 24.
-            (pkgs.corepack.override { nodejs-slim = pkgs.nodejs-slim_26; })
-            # The nightly rustfmt and the toolchain both ship lib/rustlib, so let rustfmt win the collisions.
-            (lib.hiPrio rustfmt)
-            rustToolchain
-            pkgs.taplo
-            pkgs.ast-grep
-            pkgs.actionlint
-            pkgs.zizmor
-            # Provides renovate-config-validator to check the Renovate presets.
-            pkgs.renovate
-            pkgs.nixfmt
-            pkgs.jq
-          ];
         in
         {
-          _module.args.pkgs = import inputs.nixpkgs {
+          # nixpkgs with the overlay applied, which the module makes every repository's pkgs. This
+          # must not refer to pkgs, which the module takes from here.
+          legacyPackages = import inputs.nixpkgs {
             inherit system;
-            overlays = [ inputs.rust-overlay.overlays.default ];
+            overlays = [ self.overlays.default ];
           };
 
-          # The viewer SPA embedded in the conceptory CLI.
-          packages.viewer = pkgs.stdenv.mkDerivation (finalAttrs: {
-            pname = "conceptory-viewer";
-            version = (lib.importTOML ./Cargo.toml).workspace.package.version;
-            src = lib.fileset.toSource {
-              root = ./.;
-              fileset = lib.fileset.unions [
-                ./package.json
-                ./pnpm-lock.yaml
-                ./pnpm-workspace.yaml
-                ./vite.config.ts
-                ./packages/conceptory/package.json
-                ./packages/conceptory/tsconfig
-                ./packages/conceptory/src
-                ./viewer/package.json
-                ./viewer/index.html
-                ./viewer/tsconfig.json
-                ./viewer/tsconfig.app.json
-                ./viewer/tsconfig.node.json
-                ./viewer/vite.config.ts
-                ./viewer/src
-              ];
-            };
-            pnpmDeps = pkgs.fetchPnpmDeps {
-              inherit (finalAttrs) pname version src;
-              pnpm = pkgs.pnpm_12;
-              fetcherVersion = 4;
-              # pnpm leaves an empty v11/links in the store on darwin but not on Linux, which changes the hash.
-              # Offline installs only need v11/files and the index.
-              preFixup = ''
-                rm -rf "$storePath/v11/links"
-              '';
-              hash = "sha256-O5ogi++CMWqINqqP8A77RyfkzQuHCsecHwPN8f0ImtE=";
-            };
-            nativeBuildInputs = [
+          conceptory = {
+            # conceptory runs its CLI and rules from the working tree instead.
+            cli.enable = false;
+            astGrepRules.enable = false;
+            ciPackages = [
               pkgs.nodejs_26
-              pkgs.pnpm_12
-              pkgs.pnpmConfigHook
-            ]
-            # Point the native binaries distributed via npm at Nix's dynamic linker and libraries.
-            ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.autoPatchelfHook ];
-            buildInputs = lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.stdenv.cc.cc.lib ];
-            buildPhase = ''
-              runHook preBuild
-              cd viewer
-              ../node_modules/.bin/vp build
-              runHook postBuild
+              # corepack runs pnpm on its own Node.js, so build it with Node.js 26 instead of the default 24.
+              (pkgs.corepack.override { nodejs-slim = pkgs.nodejs-slim_26; })
+              # The nightly rustfmt and the toolchain both ship lib/rustlib, so let rustfmt win the collisions.
+              (lib.hiPrio rustfmt)
+              build.rustToolchain
+              # Rust builds need a linker.
+              pkgs.stdenv.cc
+              pkgs.taplo
+              # Provides renovate-config-validator to check the Renovate presets.
+              pkgs.renovate
+              pkgs.jq
+            ];
+            env.COREPACK_ENABLE_DOWNLOAD_PROMPT = "0";
+            # Make the commands installed by pnpm, such as vp, available without direnv as well.
+            shellHook = ''
+              export PATH="$PWD/node_modules/.bin:$PATH"
             '';
-            installPhase = ''
-              runHook preInstall
-              cp -r dist $out
-              runHook postInstall
-            '';
-          });
+          };
 
-          packages.conceptory = craneLib.buildPackage (
-            commonArgs
-            // {
-              inherit cargoArtifacts;
-              cargoExtraArgs = "--locked --package conceptory";
-              # Tests run in checks.
-              doCheck = false;
-              env.CONCEPTORY_VIEWER_DIST = config.packages.viewer;
-              meta.mainProgram = "conceptory";
-            }
-          );
-
-          # ast-grep rules distributed to downstream repositories, with one directory per language. Each
-          # repository links to this package from its devShell and points sgconfig.yaml at the directories
-          # for the languages it uses.
-          packages.ast-grep-rules = pkgs.runCommand "conceptory-ast-grep-rules" { } ''
-            cp -r ${
-              lib.fileset.toSource {
-                root = ./ast-grep/rules;
-                fileset = ./ast-grep/rules;
-              }
-            } $out
-          '';
+          packages = {
+            inherit (pkgs) conceptory;
+            inherit (build) viewer;
+            ast-grep-rules = pkgs.conceptory-ast-grep-rules;
+          };
 
           checks = {
             inherit (config.packages) conceptory;
@@ -193,38 +126,55 @@
                   ast-grep test
                   touch $out
                 '';
-            clippy = craneLib.cargoClippy (
-              commonArgs
+            clippy = build.craneLib.cargoClippy (
+              build.commonArgs
               // {
-                inherit cargoArtifacts;
+                inherit (build) cargoArtifacts;
                 cargoClippyExtraArgs = "--all-targets -- --deny warnings";
               }
             );
-            test = craneLib.cargoTest (
-              commonArgs
+            test = build.craneLib.cargoTest (
+              build.commonArgs
               // {
-                inherit cargoArtifacts;
+                inherit (build) cargoArtifacts;
                 cargoTestExtraArgs = "--workspace";
               }
             );
-          };
 
-          # Installed into a Nix profile in CI. Rust builds need a linker, so it includes a C compiler.
-          packages.ci = pkgs.buildEnv {
-            name = "conceptory-ci";
-            paths = ciTools ++ [ pkgs.stdenv.cc ];
-          };
+            # The overlay only adds names, because replacing a package in nixpkgs would rebuild its
+            # dependents.
+            overlay-adds-only =
+              let
+                added = builtins.attrNames (import ./nix/overlay.nix { inherit (inputs) crane; } pkgs pkgs);
+                replaced = builtins.filter (name: inputs.nixpkgs.legacyPackages.${system} ? ${name}) added;
+              in
+              assert lib.assertMsg (
+                replaced == [ ]
+              ) "The overlay replaces packages in nixpkgs: ${toString replaced}";
+              pkgs.runCommand "conceptory-overlay-adds-only" { } "touch $out";
 
-          # Rust builds need a linker, so use mkShell, which includes a C compiler.
-          devShells.default = pkgs.mkShell {
-            packages = ciTools;
-            env = {
-              COREPACK_ENABLE_DOWNLOAD_PROMPT = "0";
-            };
-            # Make the commands installed by pnpm, such as vp, available without direnv as well.
-            shellHook = ''
-              export PATH="$PWD/node_modules/.bin:$PATH"
-            '';
+            # Evaluates a minimal downstream flake that imports the module and builds its outputs.
+            flake-module =
+              let
+                downstream = inputs.flake-parts.lib.mkFlake { inputs.self.outPath = ./.; } {
+                  imports = [ self.flakeModules.default ];
+                  systems = [ system ];
+                  perSystem =
+                    { pkgs, ... }:
+                    {
+                      conceptory.ciPackages = [ pkgs.hello ];
+                    };
+                };
+                ci = downstream.packages.${system}.ci;
+                devShell = downstream.devShells.${system}.default;
+              in
+              pkgs.runCommand "conceptory-flake-module" { } ''
+                test -x ${ci}/bin/conceptory
+                test -x ${ci}/bin/conceptory-link-ast-grep-rules
+                test -x ${ci}/bin/hello
+                test -e ${devShell}
+                touch $out
+              '';
           };
         };
     };
