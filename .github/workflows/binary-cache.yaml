@@ -23,7 +23,9 @@ jobs:
     if: github.event_name != 'schedule'
     strategy:
       matrix:
-        runner: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
+        # The arm64 Linux runner has no latest label. It stays on 24.04 until actionlint knows the
+        # label ubuntu-26.04-arm.
+        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     # The environment only allows main, so code under review never gets signed.
@@ -53,7 +55,7 @@ jobs:
     # push keeps a manual run from collecting garbage while pushing.
     if: ${{ !cancelled() && github.event_name != 'push' && needs.push.result != 'failure' }}
     needs: [push]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: binary-cache
     permissions:
@@ -80,7 +82,7 @@ jobs:
     needs: [push, gc]
     strategy:
       matrix:
-        runner: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
+        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     permissions:
