@@ -11,10 +11,9 @@
 # | secret R2_SECRET_ACCESS_KEY (env)    | r2-binary-cache/credential          |
 # | variable R2_ENDPOINT (env)           | r2-binary-cache/endpoint            |
 # | variable R2_BUCKET (env)             | r2-binary-cache/bucket              |
-# | variable BINARY_CACHE_PUBLIC_KEY     | binary-cache-signing-key/public_key |
 #
-# (env) means the environment binary-cache, which must exist already. The public key is a
-# repository variable because the job that verifies the cache runs without the environment.
+# (env) means the environment binary-cache, which must exist already. The public key is not a
+# secret, so the action setup-nix has it in the repository instead.
 #
 # Values pass only through pipes, never through command arguments or files.
 set -euo pipefail
@@ -35,12 +34,11 @@ secret() {
 variable() {
   local value
   value=$(read_item "$2")
-  printf '%s' "$value" | gh variable set "$1" --repo "$repo" "${@:3}"
+  printf '%s' "$value" | gh variable set "$1" --repo "$repo" --env "$environment"
 }
 
 secret BINARY_CACHE_SECRET_KEY binary-cache-signing-key/credential
 secret R2_ACCESS_KEY_ID r2-binary-cache/username
 secret R2_SECRET_ACCESS_KEY r2-binary-cache/credential
-variable R2_ENDPOINT r2-binary-cache/endpoint --env "$environment"
-variable R2_BUCKET r2-binary-cache/bucket --env "$environment"
-variable BINARY_CACHE_PUBLIC_KEY binary-cache-signing-key/public_key
+variable R2_ENDPOINT r2-binary-cache/endpoint
+variable R2_BUCKET r2-binary-cache/bucket

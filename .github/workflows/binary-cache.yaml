@@ -23,7 +23,9 @@ jobs:
     if: github.event_name != 'schedule'
     strategy:
       matrix:
-        runner: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
+        # The arm64 Linux runner has no latest label. It stays on 24.04 until actionlint knows the
+        # label ubuntu-26.04-arm.
+        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     # The environment only allows main, so code under review never gets signed.
@@ -34,11 +36,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
-        with:
-          # Install upstream Nix, as development machines use it.
-          determinate: false
-          diagnostic-endpoint: ""
+      - uses: ./.github/actions/setup-nix
       # The script needs bash 4 or later, which macOS does not ship.
       - run: nix shell .#awscli2 .#bash --command scripts/binary-cache/push.sh
         env:
@@ -53,7 +51,7 @@ jobs:
     # push keeps a manual run from collecting garbage while pushing.
     if: ${{ !cancelled() && github.event_name != 'push' && needs.push.result != 'failure' }}
     needs: [push]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: binary-cache
     permissions:
@@ -62,10 +60,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
-        with:
-          determinate: false
-          diagnostic-endpoint: ""
+      - uses: ./.github/actions/setup-nix
       - run: nix shell .#awscli2 --command scripts/binary-cache/gc.sh
         env:
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
@@ -80,7 +75,7 @@ jobs:
     needs: [push, gc]
     strategy:
       matrix:
-        runner: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
+        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     permissions:
@@ -89,14 +84,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
+      - uses: ./.github/actions/setup-nix
         with:
-          determinate: false
-          diagnostic-endpoint: ""
           # writeShellApplication disallows substitution because building it is cheap, but the
           # check needs every path to come from a cache.
-          extra-conf: |
-            substituters = https://cache.nixos.org https://cache.asa1984.dev
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= ${{ vars.BINARY_CACHE_PUBLIC_KEY }}
-            always-allow-substitutes = true
+          extra-conf: always-allow-substitutes = true
       - run: nix build --no-link --max-jobs 0 .#conceptory .#ast-grep-rules .#link-ast-grep-rules
