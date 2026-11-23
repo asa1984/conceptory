@@ -25,7 +25,8 @@ key_file=$(mktemp)
 trap 'rm -f "$key_file"' EXIT
 printf '%s' "$BINARY_CACHE_SECRET_KEY" >"$key_file"
 
-aws_s3() { aws --endpoint-url "https://$R2_ENDPOINT" s3 "$@"; }
+# R2 accepts only its own region names, and the AWS CLI otherwise picks an AWS region.
+aws_s3() { aws --endpoint-url "https://$R2_ENDPOINT" --region auto s3 "$@"; }
 
 # Priority 41 makes Nix ask cache.nixos.org (40) first, so lookups of nixpkgs paths do not reach R2.
 printf 'StoreDir: /nix/store\nWantMassQuery: 1\nPriority: 41\n' |
