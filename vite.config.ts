@@ -59,7 +59,7 @@ export default defineConfig({
         cache: false,
       },
       "check:actions": {
-        command: ["actionlint", "zizmor --offline .github/workflows"],
+        command: ["actionlint", "zizmor --offline .github"],
         cache: false,
       },
       // Checks rules that oxlint and actionlint cannot express, and tests the rules themselves.

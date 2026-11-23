@@ -1,0 +1,17 @@
+name: setup-workspace
+description: >-
+  Installs the flake's CI packages and the pnpm workspace's dependencies, and puts the commands the
+  dependencies provide, such as vp, on PATH. Run setup-nix first.
+
+runs:
+  using: composite
+  steps:
+    - run: nix profile add .#ci
+      shell: bash
+    - run: pnpm install --frozen-lockfile
+      shell: bash
+      env:
+        COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+    # The path is the workspace's own, so a caller cannot put anything else on PATH.
+    - run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH" # zizmor: ignore[github-env]
+      shell: bash

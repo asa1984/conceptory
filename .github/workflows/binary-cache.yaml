@@ -36,11 +36,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
-        with:
-          # Install upstream Nix, as development machines use it.
-          determinate: false
-          diagnostic-endpoint: ""
+      - uses: ./.github/actions/setup-nix
       # The script needs bash 4 or later, which macOS does not ship.
       - run: nix shell .#awscli2 .#bash --command scripts/binary-cache/push.sh
         env:
@@ -64,10 +60,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
-        with:
-          determinate: false
-          diagnostic-endpoint: ""
+      - uses: ./.github/actions/setup-nix
       - run: nix shell .#awscli2 --command scripts/binary-cache/gc.sh
         env:
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
@@ -91,14 +84,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
+      - uses: ./.github/actions/setup-nix
         with:
-          determinate: false
-          diagnostic-endpoint: ""
           # writeShellApplication disallows substitution because building it is cheap, but the
           # check needs every path to come from a cache.
-          extra-conf: |
-            substituters = https://cache.nixos.org https://cache.asa1984.dev
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= ${{ vars.BINARY_CACHE_PUBLIC_KEY }}
-            always-allow-substitutes = true
+          extra-conf: always-allow-substitutes = true
       - run: nix build --no-link --max-jobs 0 .#conceptory .#ast-grep-rules .#link-ast-grep-rules
