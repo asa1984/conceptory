@@ -102,3 +102,22 @@ fn okf_vocabulary_writes_dictionary() {
             .contains("足す")
     );
 }
+
+#[test]
+fn okf_vocabulary_includes_style_guides() {
+    let root = Path::new(env!("CARGO_TARGET_TMPDIR")).join("vocabulary-style-guides");
+    let _ = fs::remove_dir_all(&root);
+    let out = root.join("vocabulary.json");
+    let (code, _) = conceptory(&[
+        "okf",
+        "vocabulary",
+        "--out",
+        out.to_str().expect("path is UTF-8"),
+    ]);
+    assert_eq!(code, 0);
+    assert!(
+        fs::read_to_string(out)
+            .expect("dictionary was written")
+            .contains("conceptory/guides/japanese-writing.md")
+    );
+}

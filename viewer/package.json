@@ -16,7 +16,7 @@
     "vscode-oniguruma": "catalog:"
   },
   "devDependencies": {
-    "@conceptory/tsconfig": "workspace:*",
+    "@asa1984/conceptory": "workspace:*",
     "@tailwindcss/vite": "catalog:",
     "@types/cytoscape-fcose": "catalog:",
     "@types/node": "catalog:",

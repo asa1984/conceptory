@@ -10,6 +10,7 @@ license.workspace = true
 ammonia.workspace = true
 conceptory_diagnostic.workspace = true
 jsonschema.workspace = true
+rust-embed.workspace = true
 comrak.workspace = true
 serde.workspace = true
 serde-saphyr.workspace = true

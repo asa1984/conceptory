@@ -245,15 +245,9 @@ importers:
 
   .:
     devDependencies:
-      '@conceptory/tsconfig':
+      '@asa1984/conceptory':
         specifier: workspace:*
-        version: link:packages/tsconfig
-      '@conceptory/vite-plus-config':
-        specifier: workspace:*
-        version: link:packages/vite-plus-config
-      '@textlint-ja/textlint-rule-preset-ai-writing':
-        specifier: 'catalog:'
-        version: 1.7.0
+        version: link:packages/conceptory
       '@types/node':
         specifier: 'catalog:'
         version: 26.6.6
@@ -263,6 +257,15 @@ importers:
       textlint-filter-rule-comments:
         specifier: 'catalog:'
         version: 1.3.0
+      vite-plus:
+        specifier: 'catalog:'
+        version: 1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(jiti@2.7.0)
+
+  packages/conceptory:
+    dependencies:
+      '@textlint-ja/textlint-rule-preset-ai-writing':
+        specifier: 'catalog:'
+        version: 1.7.0
       textlint-rule-preset-ai-words-ja:
         specifier: 'catalog:'
         version: 1.2.1
@@ -272,20 +275,13 @@ importers:
       textlint-rule-prh:
         specifier: 'catalog:'
         version: 6.1.1
-      vite-plus:
-        specifier: 'catalog:'
-        version: 1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(jiti@2.7.0)
-
-  packages/tsconfig: {}
-
-  packages/vite-plus-config:
     devDependencies:
-      '@conceptory/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 26.6.6
+      textlint:
+        specifier: 'catalog:'
+        version: 15.8.0
       vite-plus:
         specifier: 'catalog:'
         version: 1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(jiti@2.7.0)
@@ -323,9 +319,9 @@ importers:
         specifier: 'catalog:'
         version: 2.0.1
     devDependencies:
-      '@conceptory/tsconfig':
+      '@asa1984/conceptory':
         specifier: workspace:*
-        version: link:../packages/tsconfig
+        version: link:../packages/conceptory
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.3.4(@voidzero-dev/vite-plus-core@8.3.8000(@types/node@26.6.6)(jiti@2.7.0))

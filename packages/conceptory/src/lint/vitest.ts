@@ -1,7 +1,7 @@
 import type { OxlintOverride } from "vite-plus/lint";
 
 /** Settings for tests. Assumes the Vitest baseline, which doesn't isolate test files. */
-export const testLint = {
+export const testLint: Omit<OxlintOverride, "files"> & Required<Pick<OxlintOverride, "plugins">> = {
   plugins: ["vitest"],
   rules: {
     // Module mocks persist across test files, which is incompatible with not isolating them.
@@ -34,4 +34,4 @@ export const testLint = {
     "vitest/prefer-to-have-length": "error",
     "vitest/prefer-todo": "error",
   },
-} satisfies Omit<OxlintOverride, "files">;
+};

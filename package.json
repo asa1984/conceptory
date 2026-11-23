@@ -7,15 +7,10 @@
     "prepare": "vp config --no-agent"
   },
   "devDependencies": {
-    "@conceptory/tsconfig": "workspace:*",
-    "@conceptory/vite-plus-config": "workspace:*",
-    "@textlint-ja/textlint-rule-preset-ai-writing": "catalog:",
+    "@asa1984/conceptory": "workspace:*",
     "@types/node": "catalog:",
     "textlint": "catalog:",
     "textlint-filter-rule-comments": "catalog:",
-    "textlint-rule-preset-ai-words-ja": "catalog:",
-    "textlint-rule-preset-ja-technical-writing": "catalog:",
-    "textlint-rule-prh": "catalog:",
     "vite-plus": "catalog:"
   },
   "packageManager": "pnpm@12.18.0"

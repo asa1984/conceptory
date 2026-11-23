@@ -1,6 +1,6 @@
-import { fmt } from "@conceptory/vite-plus-config/fmt";
-import { lint, reactLint, testLint } from "@conceptory/vite-plus-config/lint";
-import { test } from "@conceptory/vite-plus-config/test";
+import { fmt } from "@asa1984/conceptory/fmt";
+import { lint, reactLint, testLint } from "@asa1984/conceptory/lint";
+import { test } from "@asa1984/conceptory/test";
 import { defineConfig } from "vite-plus";
 import { configDefaults } from "vite-plus/test/config";
 
@@ -11,6 +11,12 @@ export default defineConfig({
       ...lint.overrides,
       { files: ["viewer/src/**"], ...reactLint },
       { files: ["**/*.{test,spec}.{ts,mts,cts,tsx}"], ...testLint },
+      {
+        // Ambient module declarations must be in a script, not a module. Disable comments cannot
+        // suppress this rule because it reports the whole file.
+        files: ["packages/conceptory/src/textlint-modules.d.ts"],
+        rules: { "import/unambiguous": "off" },
+      },
     ],
   },
   fmt: {
@@ -40,6 +46,7 @@ export default defineConfig({
           "check:actions",
           "check:ast-grep",
           "check:catalog",
+          "check:package",
           "check:skills",
           "check:files",
           "check:renovate",
@@ -63,6 +70,11 @@ export default defineConfig({
       },
       "check:catalog": {
         command: "node scripts/check-catalog.ts",
+        cache: false,
+      },
+      // Installs the tarball of @asa1984/conceptory into a temporary project and loads its configs.
+      "check:package": {
+        command: "node scripts/check-package.ts",
         cache: false,
       },
       // Ensures the symlinks in skills' references/ point to existing files (ADR 0004 "Define style guides for skills").
@@ -104,11 +116,13 @@ export default defineConfig({
         command: "cargo run --quiet --package conceptory -- okf index docs guides",
         cache: false,
       },
-      // Generates the textlint dictionaries from the terms and vocabulary in the frontmatter of docs/ and guides/.
+      // Generates the textlint dictionaries from the terms in the frontmatter of docs/ and guides/
+      // and from the vocabulary. The CLI embeds the vocabulary of guides/, so guides/ is not passed
+      // to `okf vocabulary`, the same as in downstream repositories.
       "okf:dictionaries": {
         command: [
           "cargo run --quiet --package conceptory -- okf terms docs guides --prh .textlint/prh.yaml",
-          "cargo run --quiet --package conceptory -- okf vocabulary docs guides --out .textlint/vocabulary.json",
+          "cargo run --quiet --package conceptory -- okf vocabulary docs --out .textlint/vocabulary.json",
         ],
         cache: false,
       },

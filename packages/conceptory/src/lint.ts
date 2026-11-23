@@ -58,7 +58,7 @@ const categoryExceptions = {
   "eslint/max-lines-per-function": "off",
 } as const;
 
-export const lint = {
+export const lint: OxlintConfig & Required<Pick<OxlintConfig, "overrides">> = {
   plugins: [...basePlugins],
   categories: Object.fromEntries(enabledCategories.map((category) => [category, "error"])),
   options: {
@@ -82,4 +82,4 @@ export const lint = {
       },
     },
   ],
-} satisfies OxlintConfig;
+};

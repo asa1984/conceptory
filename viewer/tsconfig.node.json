@@ -1,5 +1,5 @@
 {
-  "extends": "@conceptory/tsconfig/base.json",
+  "extends": "@asa1984/conceptory/tsconfig/base.json",
   "compilerOptions": {
     "types": ["node"]
   },

@@ -1,9 +1,9 @@
 {
   "extends": [
-    "@conceptory/tsconfig/base.json",
-    "@conceptory/tsconfig/bundler.json",
-    "@conceptory/tsconfig/dom.json",
-    "@conceptory/tsconfig/react.json"
+    "@asa1984/conceptory/tsconfig/base.json",
+    "@asa1984/conceptory/tsconfig/bundler.json",
+    "@asa1984/conceptory/tsconfig/dom.json",
+    "@asa1984/conceptory/tsconfig/react.json"
   ],
   "compilerOptions": {
     "types": ["vite-plus/client"]

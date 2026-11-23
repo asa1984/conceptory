@@ -5,6 +5,7 @@ mod bundle;
 mod checks;
 mod diagnostic;
 mod markdown;
+mod style_guides;
 mod view;
 
 use std::{
@@ -121,6 +122,12 @@ pub fn term_list(bundles: &[Bundle]) -> String {
 #[must_use]
 pub fn vocabulary_dictionary(bundles: &[Bundle]) -> String {
     checks::vocabulary::dictionary(bundles)
+}
+
+/// Loads conceptory's style guides embedded in the binary as an OKF bundle.
+#[must_use]
+pub fn style_guides() -> Bundle {
+    style_guides::load()
 }
 
 /// Builds the display data for the viewer. Pass the result of [`check`] as `diagnostics`.

@@ -1,0 +1,55 @@
+{
+  "name": "@asa1984/conceptory",
+  "version": "0.0.0",
+  "description": "Baseline tsconfig, Vite+ configs, and textlint preset distributed by conceptory",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asa1984/conceptory.git",
+    "directory": "packages/conceptory"
+  },
+  "files": [
+    "dist",
+    "tsconfig"
+  ],
+  "type": "module",
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/bundler.json": "./tsconfig/bundler.json",
+    "./tsconfig/dom.json": "./tsconfig/dom.json",
+    "./tsconfig/library.json": "./tsconfig/library.json",
+    "./tsconfig/react.json": "./tsconfig/react.json",
+    "./lint": "./src/lint.ts",
+    "./fmt": "./src/fmt.ts",
+    "./test": "./src/test.ts",
+    "./preset-textlint": "./src/preset-textlint.ts"
+  },
+  "publishConfig": {
+    "exports": {
+      "./tsconfig/base.json": "./tsconfig/base.json",
+      "./tsconfig/bundler.json": "./tsconfig/bundler.json",
+      "./tsconfig/dom.json": "./tsconfig/dom.json",
+      "./tsconfig/library.json": "./tsconfig/library.json",
+      "./tsconfig/react.json": "./tsconfig/react.json",
+      "./lint": "./dist/lint.mjs",
+      "./fmt": "./dist/fmt.mjs",
+      "./test": "./dist/test.mjs",
+      "./preset-textlint": "./dist/preset-textlint.mjs"
+    }
+  },
+  "dependencies": {
+    "@textlint-ja/textlint-rule-preset-ai-writing": "catalog:",
+    "textlint-rule-preset-ai-words-ja": "catalog:",
+    "textlint-rule-preset-ja-technical-writing": "catalog:",
+    "textlint-rule-prh": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "textlint": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "peerDependencies": {
+    "textlint": "^15.8.0",
+    "vite-plus": "^1.7.0"
+  }
+}

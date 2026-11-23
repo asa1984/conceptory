@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "@asa1984/conceptory/tsconfig/base.json",
+    "@asa1984/conceptory/tsconfig/library.json"
+  ],
+  "compilerOptions": {
+    "types": ["node"]
+  }
+}
