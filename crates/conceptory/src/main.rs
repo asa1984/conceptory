@@ -83,10 +83,11 @@ enum OkfCommand {
         prh: Option<PathBuf>,
     },
     #[command(
-        about = "frontmatter の vocabulary から textlint-rule-preset-ai-words-ja の辞書を書き出す"
+        about = "conceptory のスタイルガイドと frontmatter の vocabulary から \
+                 textlint-rule-preset-ai-words-ja の辞書を書き出す"
     )]
     Vocabulary {
-        #[arg(required = true, help = "OKF bundle のルート")]
+        #[arg(help = "OKF bundle のルート。スタイルガイドの語彙は常に含める")]
         roots: Vec<PathBuf>,
         #[arg(long, value_name = "FILE", help = "辞書の書き出し先")]
         out: PathBuf,
@@ -213,10 +214,9 @@ fn run_okf(command: OkfCommand) -> Result<ExitCode, Error> {
         },
         OkfCommand::Vocabulary { roots, out } => {
             let loaded = conceptory_okf::load(&roots)?;
-            write_file(
-                &out,
-                &conceptory_okf::vocabulary_dictionary(&loaded.bundles),
-            )?;
+            let mut bundles = vec![conceptory_okf::style_guides()];
+            bundles.extend(loaded.bundles);
+            write_file(&out, &conceptory_okf::vocabulary_dictionary(&bundles))?;
             Ok(ExitCode::SUCCESS)
         },
         OkfCommand::View {

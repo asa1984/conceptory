@@ -79,7 +79,7 @@ sources:
 
 ## 語彙
 
-<!-- textlint-disable ai-words-ja/no-ai-words -->
+<!-- textlint-disable @asa1984/conceptory/preset-textlint/ai-words-ja/no-ai-words -->
 
 ### 慣用的な語彙を使う
 
@@ -128,7 +128,7 @@ sources:
 
 無生物主語の構文も直訳調になりやすい。「このオプションは高速なビルドを可能にする」は「このオプションを使うとビルドが速くなる」のように、人や操作を起点にして書き直す。
 
-<!-- textlint-enable ai-words-ja/no-ai-words -->
+<!-- textlint-enable @asa1984/conceptory/preset-textlint/ai-words-ja/no-ai-words -->
 
 ## 文のつながり
 

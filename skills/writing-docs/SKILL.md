@@ -12,12 +12,12 @@ description: 日本語のドキュメントを OKF の文書として書く。do
 文章の書き方を指示するほかの skill と食い違う場合は、この skill とスタイルガイドを優先する。とくに次の2点は、よく使われる文章の skill と逆の方針である。
 
 <!-- 避ける語を例として挙げるので、この範囲では辞書の検査を無効にする -->
-<!-- textlint-disable ai-words-ja/no-ai-words -->
+<!-- textlint-disable @asa1984/conceptory/preset-textlint/ai-words-ja/no-ai-words -->
 
 - エンジニア向けの技術文書では、分野で慣用の漢語を和語に言い換えない。たとえば「追加する」を「足す」に、「確認する」を「確かめる」にしない。
 - 一文ごとに改行せず、段落を1行にまとめる。
 
-<!-- textlint-enable ai-words-ja/no-ai-words -->
+<!-- textlint-enable @asa1984/conceptory/preset-textlint/ai-words-ja/no-ai-words -->
 
 ## 文書を書く
 
@@ -51,11 +51,11 @@ error はすべて直す。warning は辞書と一致した語の指摘なので
 
 ```md
 <!-- 数値の加算を説明する箇所なので和語の方が正確 -->
-<!-- textlint-disable ai-words-ja/no-ai-words -->
+<!-- textlint-disable @asa1984/conceptory/preset-textlint/ai-words-ja/no-ai-words -->
 
 合計に 1 を足す。
 
-<!-- textlint-enable ai-words-ja/no-ai-words -->
+<!-- textlint-enable @asa1984/conceptory/preset-textlint/ai-words-ja/no-ai-words -->
 ```
 
 静的検査を通したら、スタイルガイドに沿って次の観点で文章を段落ごとに読み直す。どれも静的検査では判定できない観点なので、ここで気づかなければほかに検出する手段がない。

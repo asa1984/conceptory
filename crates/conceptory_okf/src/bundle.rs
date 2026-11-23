@@ -101,6 +101,28 @@ impl Bundle {
         })
     }
 
+    /// Builds an OKF bundle from Markdown sources that are not on disk, given as pairs of the path
+    /// from the bundle root and the content. Diagnostics show the paths under `display_root`.
+    pub fn from_sources(
+        display_root: &str,
+        sources: impl IntoIterator<Item = (String, String)>,
+        diagnostics: &mut Vec<Diagnostic>,
+    ) -> Self {
+        let mut sources: Vec<_> = sources.into_iter().collect();
+        sources.sort();
+        let files = sources
+            .into_iter()
+            .map(|(rel, source)| {
+                let display = format!("{display_root}/{rel}");
+                parse_file(rel, display, source, diagnostics)
+            })
+            .collect();
+        Self {
+            root: PathBuf::from(display_root),
+            files,
+        }
+    }
+
     #[must_use]
     pub fn file(&self, rel: &str) -> Option<&MarkdownFile> {
         self.files.iter().find(|file| file.rel == rel)
@@ -164,7 +186,17 @@ fn read_file(
 ) -> Result<MarkdownFile, Error> {
     let source = fs::read_to_string(path).map_err(|e| Error::io(path, e))?;
     let display = root.join(&rel).display().to_string();
-    let kind = match path.file_name().and_then(|name| name.to_str()) {
+    Ok(parse_file(rel, display, source, diagnostics))
+}
+
+/// Parses the frontmatter and body structure of one Markdown file.
+fn parse_file(
+    rel: String,
+    display: String,
+    source: String,
+    diagnostics: &mut Vec<Diagnostic>,
+) -> MarkdownFile {
+    let kind = match rel.rsplit('/').next() {
         Some("index.md") => Kind::Index,
         Some("log.md") => Kind::Log,
         _ => Kind::Concept,
@@ -186,14 +218,14 @@ fn read_file(
         },
     };
     let outline = markdown::parse(&source);
-    Ok(MarkdownFile {
+    MarkdownFile {
         rel,
         display,
         kind,
         source,
         frontmatter,
         outline,
-    })
+    }
 }
 
 /// Returns the YAML enclosed by `---` at the start of the file.

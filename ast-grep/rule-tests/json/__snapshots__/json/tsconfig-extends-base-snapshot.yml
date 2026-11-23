@@ -20,16 +20,16 @@ snapshots:
         style: secondary
         start: 0
         end: 37
-  '{ "extends": ["@conceptory/tsconfig/bundler.json", "@conceptory/tsconfig/base.json"] }':
+  '{ "extends": ["@asa1984/conceptory/tsconfig/bundler.json", "@asa1984/conceptory/tsconfig/base.json"] }':
     labels:
-      - source: '{ "extends": ["@conceptory/tsconfig/bundler.json", "@conceptory/tsconfig/base.json"] }'
+      - source: '{ "extends": ["@asa1984/conceptory/tsconfig/bundler.json", "@asa1984/conceptory/tsconfig/base.json"] }'
         style: primary
         start: 0
-        end: 86
-      - source: '{ "extends": ["@conceptory/tsconfig/bundler.json", "@conceptory/tsconfig/base.json"] }'
+        end: 102
+      - source: '{ "extends": ["@asa1984/conceptory/tsconfig/bundler.json", "@asa1984/conceptory/tsconfig/base.json"] }'
         style: secondary
         start: 0
-        end: 86
+        end: 102
   '{ "files": ["src/main.ts"], "references": [{ "path": "./tsconfig.app.json" }] }':
     labels:
       - source: '{ "files": ["src/main.ts"], "references": [{ "path": "./tsconfig.app.json" }] }'

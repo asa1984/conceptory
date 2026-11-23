@@ -30,7 +30,8 @@
           # Use the same toolchain for the devShell and the package builds.
           rustToolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
           craneLib = (inputs.crane.mkLib pkgs).overrideToolchain (_: rustToolchain);
-          # conceptory_okf embeds the schemas with include_str!. The clippy check reads clippy.toml.
+          # conceptory_okf embeds the schemas with include_str! and the style guides in guides/ with rust-embed.
+          # The clippy check reads clippy.toml.
           commonArgs = {
             src = lib.fileset.toSource {
               root = ./.;
@@ -39,6 +40,7 @@
                 ./Cargo.lock
                 ./clippy.toml
                 ./crates
+                ./guides
                 ./schemas
               ];
             };
@@ -50,8 +52,9 @@
           cargoArtifacts = craneLib.buildDepsOnly commonArgs;
           # rustfmt.toml uses nightly-only options, so take rustfmt alone from a pinned nightly.
           rustfmt = pkgs.rust-bin.nightly."2026-10-09".rustfmt;
-          # Tools for development and CI. The devShell and packages.tools both provide them.
-          tools = [
+          # Tools used in CI, which packages.ci provides (ADR 0019 "Distribute artifacts via npm, Nix flake,
+          # and the conceptory CLI"). The devShell provides the same tools for development.
+          ciTools = [
             pkgs.nodejs_26
             # corepack runs pnpm on its own Node.js, so build it with Node.js 26 instead of the default 24.
             (pkgs.corepack.override { nodejs-slim = pkgs.nodejs-slim_26; })
@@ -85,8 +88,9 @@
                 ./pnpm-lock.yaml
                 ./pnpm-workspace.yaml
                 ./vite.config.ts
-                ./packages/tsconfig
-                ./packages/vite-plus-config
+                ./packages/conceptory/package.json
+                ./packages/conceptory/tsconfig
+                ./packages/conceptory/src
                 ./viewer/package.json
                 ./viewer/index.html
                 ./viewer/tsconfig.json
@@ -206,14 +210,14 @@
           };
 
           # Installed into a Nix profile in CI. Rust builds need a linker, so it includes a C compiler.
-          packages.tools = pkgs.buildEnv {
-            name = "conceptory-tools";
-            paths = tools ++ [ pkgs.stdenv.cc ];
+          packages.ci = pkgs.buildEnv {
+            name = "conceptory-ci";
+            paths = ciTools ++ [ pkgs.stdenv.cc ];
           };
 
           # Rust builds need a linker, so use mkShell, which includes a C compiler.
           devShells.default = pkgs.mkShell {
-            packages = tools;
+            packages = ciTools;
             env = {
               COREPACK_ENABLE_DOWNLOAD_PROMPT = "0";
             };

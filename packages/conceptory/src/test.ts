@@ -8,10 +8,10 @@
 
 import type { TestUserConfig } from "vite-plus/test/config";
 
-export const test = {
+export const test: TestUserConfig = {
   isolate: false,
   // After each test, restore spies and the values changed by vi.stubGlobal and vi.stubEnv.
   restoreMocks: true,
   unstubGlobals: true,
   unstubEnvs: true,
-} satisfies TestUserConfig;
+};

@@ -1,6 +1,0 @@
-{
-  "extends": "@conceptory/tsconfig/base.json",
-  "compilerOptions": {
-    "types": ["node"]
-  }
-}

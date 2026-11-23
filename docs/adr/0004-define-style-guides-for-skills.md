@@ -95,7 +95,7 @@ conceptory CLI がスタイルガイドの frontmatter をスキーマで検査�
 日本語の文章の規約は [日本語の技術文書の書き方](../../guides/japanese-writing.md) にある。conceptory を使うリポジトリでは、規約と食い違う yomiyasu を無効にする。
 
 <!-- 避ける語を例として挙げるので、この範囲では辞書の検査を無効にする -->
-<!-- textlint-disable ai-words-ja/no-ai-words -->
+<!-- textlint-disable @asa1984/conceptory/preset-textlint/ai-words-ja/no-ai-words -->
 
 スタイルガイドの各節は、次の資料と調査に基づく。
 
@@ -110,7 +110,7 @@ conceptory CLI がスタイルガイドの frontmatter をスキーマで検査�
 
 公用文作成の考え方と Microsoft の日本語スタイルガイドは、一般の読み手に向けた文章では和語を勧めている。技術文書で漢語を使うという規約は、両者が専門的な文書や開発者向けの文章を別に扱っていることに基づく。一方で「正本」の和語化と漢語の動詞の和語化については、調査で出典が見つからなかった。この2つは conceptory の文書を書く中での観察に基づく。
 
-<!-- textlint-enable ai-words-ja/no-ai-words -->
+<!-- textlint-enable @asa1984/conceptory/preset-textlint/ai-words-ja/no-ai-words -->
 
 [^koyobun]: 文化審議会「公用文作成の考え方（建議）」2022年。
 

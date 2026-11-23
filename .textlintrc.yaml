@@ -2,27 +2,12 @@
 filters:
   comments: true
 rules:
-  preset-ja-technical-writing:
-    # Splitting sentences to fit a character count fragments the prose, and inline code and ADR
-    # titles inflate the count, so sentence length is left to review.
-    sentence-length: false
-    # Documents use the plain (dearu) style (guides/japanese-writing.md).
-    no-mix-dearu-desumasu:
-      preferInHeader: ""
-      preferInBody: である
-      preferInList: である
-      strict: true
-  "@textlint-ja/preset-ai-writing": true
-  preset-ai-words-ja:
-    no-ai-words:
-      # Dictionary-based rules can also flag correct usage, so report them as warnings.
+  "@asa1984/conceptory/preset-textlint":
+    # textlint replaces the preset's options for a rule instead of merging them, so this restates
+    # the preset's severity and dictionaryPath.
+    ai-words-ja/no-ai-words:
       severity: warning
-      # Generated from the style guides' vocabulary by `conceptory okf vocabulary`.
       dictionaryPath: ./.textlint/vocabulary.json
       # Words used legitimately throughout conceptory's documents.
       allows:
         - 検査
-  prh:
-    # Generated from the documents' terms by `conceptory okf terms`.
-    rulePaths:
-      - ./.textlint/prh.yaml

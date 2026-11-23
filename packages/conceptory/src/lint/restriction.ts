@@ -1,7 +1,7 @@
 import type { DummyRuleMap } from "vite-plus/lint";
 
 /** Rules picked from the restriction category. */
-export const restrictionRules = {
+export const restrictionRules: DummyRuleMap = {
   "typescript/no-explicit-any": "error",
   "typescript/no-non-null-assertion": "error",
   "typescript/no-non-null-asserted-nullish-coalescing": "error",
@@ -60,4 +60,4 @@ export const restrictionRules = {
   "unicorn/prefer-number-properties": "error",
 
   "jsdoc/empty-tags": "error",
-} satisfies DummyRuleMap;
+};

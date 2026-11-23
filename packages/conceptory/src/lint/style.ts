@@ -1,7 +1,7 @@
 import type { DummyRuleMap } from "vite-plus/lint";
 
 /** Rules picked from the style category. */
-export const styleRules = {
+export const styleRules: DummyRuleMap = {
   // Declare types with type. libraryLint allows interface for public libraries.
   "typescript/consistent-type-definitions": ["error", "type"],
   // Method syntax checks parameter types bivariantly, so use function property syntax.
@@ -118,4 +118,4 @@ export const styleRules = {
   "unicorn/throw-new-error": "error",
 
   "jsdoc/no-blank-blocks": "error",
-} satisfies DummyRuleMap;
+};

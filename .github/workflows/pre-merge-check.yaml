@@ -50,7 +50,7 @@ jobs:
         with:
           use-flakehub: false
           diagnostic-endpoint: ""
-      - run: nix profile add .#tools
+      - run: nix profile add .#ci
       - run: pnpm install --frozen-lockfile
         env:
           COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
