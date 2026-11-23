@@ -1,8 +1,4 @@
 {
-  "skillOverrides": {
-    "yomiyasu": "off",
-    "yomiyasu:yomiyasu": "off"
-  },
   "hooks": {
     "SessionStart": [
       {
