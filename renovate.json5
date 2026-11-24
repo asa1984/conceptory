@@ -1,4 +1,8 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["local>asa1984/conceptory//renovate/default.json5"],
+  // The workflow pnpm-deps-hash commits the hash of the viewer's pnpm dependencies to Renovate's
+  // branches. Without this, Renovate treats those branches as edited by someone else and stops
+  // rebasing them.
+  gitIgnoredAuthors: ["41898282+github-actions[bot]@users.noreply.github.com"],
 }

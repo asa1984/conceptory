@@ -1,0 +1,44 @@
+# Updates the hash of the viewer's pnpm dependencies on Renovate's branches. Renovate updates
+# pnpm-lock.yaml but cannot run commands to update the hash in nix/build.nix, so without this the
+# flake check fails on every update of the JavaScript dependencies.
+name: pnpm-deps-hash
+
+on:
+  push:
+    branches: ["renovate/**"]
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-nix
+      - run: scripts/update-pnpm-deps-hash.sh
+      # Commits through the API, so the checkout keeps no credentials.
+      # Renovate ignores commits by github-actions[bot] (renovate.json5), so it keeps rebasing and
+      # automerging the branch. Events from GITHUB_TOKEN start no workflow runs except dispatches,
+      # so this dispatches the check that the branch protection requires on the new commit.
+      - run: |
+          if git diff --quiet nix/build.nix; then
+            exit 0
+          fi
+          gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/nix/build.nix" \
+            -f message="build(nix): update the hash of the viewer's pnpm dependencies" \
+            -f content="$(base64 --wrap=0 nix/build.nix)" \
+            -f sha="$(git rev-parse HEAD:nix/build.nix)" \
+            -f branch="$GITHUB_REF_NAME" >/dev/null
+          gh workflow run pre-merge-check.yaml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
+        env:
+          GH_TOKEN: ${{ github.token }}
