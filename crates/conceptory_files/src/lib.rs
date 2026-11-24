@@ -130,8 +130,7 @@ fn check_workflow_name(path: &Path, display: &Path) -> Result<Option<Diagnostic>
     };
     let stem = path
         .file_stem()
-        .map(|stem| stem.to_string_lossy())
-        .unwrap_or_default();
+        .map_or_default(|stem| stem.to_string_lossy());
     let message = match workflow.name {
         Some(name) if name == stem => return Ok(None),
         Some(name) => {

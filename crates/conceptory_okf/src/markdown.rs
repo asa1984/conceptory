@@ -109,7 +109,7 @@ fn visit<'a>(node: &'a AstNode<'a>, context: &mut Context, outline: &mut Outline
             dest: target.url,
             line,
         }),
-        NodeValue::Strong => outline.strongs.push(text_of(node)),
+        NodeValue::Strong(_) => outline.strongs.push(text_of(node)),
         NodeValue::Item(_) | NodeValue::TaskItem(_) => {
             outline.items.push(block(node, context, line));
             let outer = context.in_item;
