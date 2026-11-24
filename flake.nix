@@ -20,7 +20,6 @@
       flakeModule = import ./nix/flake-module.nix { conceptory = self; };
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      # conceptory sets up its own pkgs, packages.ci, and devShell with the module it distributes.
       imports = [ flakeModule ];
 
       systems = [
@@ -69,19 +68,18 @@
             astGrepRules.enable = false;
             ciPackages = [
               pkgs.nodejs_26
-              # corepack runs pnpm on its own Node.js, so build it with Node.js 26 instead of the default 24.
-              (pkgs.corepack.override { nodejs-slim = pkgs.nodejs-slim_26; })
+              # pnpm fetches and switches to the version that packageManager in package.json names, which
+              # Renovate updates.
+              pkgs.pnpm
               # The nightly rustfmt and the toolchain both ship lib/rustlib, so let rustfmt win the collisions.
               (lib.hiPrio rustfmt)
               build.rustToolchain
               # Rust builds need a linker.
               pkgs.stdenv.cc
               pkgs.taplo
-              # Provides renovate-config-validator to check the Renovate presets.
               pkgs.renovate
               pkgs.jq
             ];
-            env.COREPACK_ENABLE_DOWNLOAD_PROMPT = "0";
             # Make the commands installed by pnpm, such as vp, available without direnv as well.
             shellHook = ''
               export PATH="$PWD/node_modules/.bin:$PATH"

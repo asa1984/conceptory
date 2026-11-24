@@ -55,7 +55,7 @@ let
     };
     pnpmDeps = pkgs.fetchPnpmDeps {
       inherit (finalAttrs) pname version src;
-      pnpm = pkgs.pnpm_12;
+      inherit (pkgs) pnpm;
       fetcherVersion = 4;
       # pnpm leaves an empty v11/links in the store on darwin but not on Linux, which changes the hash.
       # Offline installs only need v11/files and the index.
@@ -66,7 +66,7 @@ let
     };
     nativeBuildInputs = [
       pkgs.nodejs_26
-      pkgs.pnpm_12
+      pkgs.pnpm
       pkgs.pnpmConfigHook
     ]
     # Point the native binaries distributed via npm at Nix's dynamic linker and libraries.
