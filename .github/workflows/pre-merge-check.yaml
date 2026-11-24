@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  # The workflow pnpm-deps-hash dispatches this for the commits it makes on Renovate's branches.
+  workflow_dispatch:
 
 permissions: {}
 
