@@ -62,7 +62,7 @@ let
       preFixup = ''
         rm -rf "$storePath/v11/links"
       '';
-      hash = "sha256-O5ogi++CMWqINqqP8A77RyfkzQuHCsecHwPN8f0ImtE=";
+      hash = "sha256-RJPurbjAbHSiYwChKkrj3TO80AzYp8Id3lbIzS3XTMk=";
     };
     nativeBuildInputs = [
       pkgs.nodejs_26

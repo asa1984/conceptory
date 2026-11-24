@@ -156,7 +156,7 @@ fn visit(
             continue;
         }
         let rel = if rel_dir.is_empty() {
-            name.clone()
+            name
         } else {
             format!("{rel_dir}/{name}")
         };
