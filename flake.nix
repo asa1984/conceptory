@@ -1,4 +1,9 @@
 {
+  nixConfig = {
+    extra-substituters = [ "https://cache.asa1984.dev" ];
+    extra-trusted-public-keys = [ "cache.asa1984.dev-2:ZDLpWsB88DIjBav8I3NSSRuBACUgljt7dP2KVkv7IDg=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";

@@ -37,5 +37,5 @@ op item create --vault "$vault" --template <(
     }'
 ) >/dev/null
 
-echo "Saved $vault/$item. Add the public key to .github/actions/setup-nix/action.yaml:"
+echo "Saved $vault/$item. Add the public key to flake.nix and .github/actions/setup-nix/action.yaml:"
 echo "$public"
