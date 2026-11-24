@@ -13,8 +13,9 @@ runs:
   using: composite
   steps:
     # The cache's key is written here instead of in a variable because composite actions cannot
-    # read variables. Rotating the key means adding the new key here before removing the old one
-    # (ADR 0021 "Serve the packages conceptory's CI builds from a binary cache on Cloudflare R2").
+    # read variables. flake.nix has the key too. Rotating the key means adding the new key to both
+    # before removing the old one (ADR 0021 "Serve the packages conceptory's CI builds from a binary
+    # cache on Cloudflare R2").
     - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
       with:
         # Install upstream Nix, as development machines use it.
