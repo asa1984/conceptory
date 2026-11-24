@@ -18,6 +18,18 @@
     inputs@{ self, ... }:
     let
       flakeModule = import ./nix/flake-module.nix { conceptory = self; };
+      overlay = import ./nix/overlay.nix {
+        inherit (inputs) crane;
+        # Releases are tags, so the revision identifies the release (ADR 0022 "Release with calendar
+        # versioning and publish the npm package with trusted publishing").
+        buildInfo =
+          let
+            date = self.lastModifiedDate;
+          in
+          "${
+            self.shortRev or self.dirtyShortRev or "unknown"
+          } (${builtins.substring 0 4 date}-${builtins.substring 4 2 date}-${builtins.substring 6 2 date})";
+      };
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ flakeModule ];
@@ -33,7 +45,7 @@
         # (ADR 0020 "Provide nixpkgs with the overlay and a flake-parts module").
         overlays.default = inputs.nixpkgs.lib.composeManyExtensions [
           inputs.rust-overlay.overlays.default
-          (import ./nix/overlay.nix { inherit (inputs) crane; })
+          overlay
         ];
         flakeModules.default = flakeModule;
       };
@@ -149,7 +161,7 @@
             # dependents.
             overlay-adds-only =
               let
-                added = builtins.attrNames (import ./nix/overlay.nix { inherit (inputs) crane; } pkgs pkgs);
+                added = builtins.attrNames (overlay pkgs pkgs);
                 replaced = builtins.filter (name: inputs.nixpkgs.legacyPackages.${system} ? ${name}) added;
               in
               assert lib.assertMsg (
